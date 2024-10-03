@@ -1,6 +1,6 @@
-@BookMaster3000_HostAddress = http://localhost:5203
+@Bookmaster3000_HostAddress = http://localhost:5207
 
-GET {{BookMaster3000_HostAddress}}/weatherforecast/
+GET {{Bookmaster3000_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
