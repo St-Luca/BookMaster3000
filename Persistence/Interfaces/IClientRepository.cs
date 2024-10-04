@@ -4,11 +4,11 @@ namespace Persistence.interfaces
 {
     public interface IClientRepository
     {
-        Task<IEnumerable<Client>> GetAllClientsAsync();
-        Task<Client> GetClientByIdAsync(int id);
-        Task<Client> CreateClientAsync(Client client);
-        Task<Client> UpdateClientAsync(int id, Client client);
-        Task<bool> DeleteClientAsync(int id);
+        Task<Client> GetClientById(string id);
+        Task<List<Client>> GetAllClients();
+        Task AddClient(Client client);
+        Task EditClient(Client client);
+        Task<Client> FindClientByPhoneOrEmail(string phone, string email);
     }
 
 }

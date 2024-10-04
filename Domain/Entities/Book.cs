@@ -4,7 +4,6 @@
     {
         public int Id { get; set; }
         public required string Title { get; set; }
-        public required string Author { get; set; }
         public bool IsRented { get; set; }
 
         public string Description {get; set;}

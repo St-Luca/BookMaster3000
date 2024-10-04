@@ -13,46 +13,32 @@ namespace Persistence.Repositories
         _context = context;
     }
 
-    public async Task<IEnumerable<Client>> GetAllClientsAsync()
-    {
-        return await _context.Clients.ToListAsync();
-    }
-
-    public async Task<Client> GetClientByIdAsync(int id)
+    public async Task<Client> GetClientById(string id)
     {
         return await _context.Clients.FindAsync(id);
     }
 
-    public async Task<Client> CreateClientAsync(Client client)
+    public async Task<List<Client>> GetAllClients()
+    {
+        return await _context.Clients.ToListAsync();
+    }
+
+    public async Task AddClient(Client client)
     {
         _context.Clients.Add(client);
         await _context.SaveChangesAsync();
-        return client;
     }
 
-    public async Task<Client> UpdateClientAsync(int id, Client client)
+    public async Task EditClient(Client client)
     {
-        var existingClient = await _context.Clients.FindAsync(id);
-        if (existingClient == null) return null;
-
-        existingClient.Name = client.Name;
-        existingClient.Zip = client.Zip;
-        existingClient.City = client.City;
-        existingClient.Phone = client.Phone;
-        existingClient.Email = client.Email;
-
+        _context.Clients.Update(client);
         await _context.SaveChangesAsync();
-        return existingClient;
     }
 
-    public async Task<bool> DeleteClientAsync(int id)
+    public async Task<Client> FindClientByPhoneOrEmail(string phone, string email)
     {
-        var client = await _context.Clients.FindAsync(id);
-        if (client == null) return false;
-
-        _context.Clients.Remove(client);
-        await _context.SaveChangesAsync();
-        return true;
+        return await _context.Clients
+            .FirstOrDefaultAsync(c => c.Phone == phone || c.Email == email);
     }
 }
 }

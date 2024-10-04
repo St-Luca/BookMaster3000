@@ -14,60 +14,27 @@ namespace Application.Services
             _bookRepository = bookRepository;
         }
 
-        public async Task<IEnumerable<BookDTO>> GetAllBooksAsync()
+        public List<BookDto> FindBooks(string title, string author, string subject)
         {
-            var books = await _bookRepository.GetAllBooksAsync();
-            return books.Select(MapToDto);
+            var books = _bookRepository.GetBooks();
+
+            return books
+                .Where(book => CheckMatch(title, author, subject, book))
+                .Select(book => new BookDto
+                {
+                    Title = book.Title,
+                    BookAuthors = book.BookAuthors.Select(a => a.Author.Name).ToList(),
+                    BookSubjects = book.BookSubjects.Select(s => s.Subject.Name).ToList(),
+                }).ToList();
         }
 
-        public async Task<BookDTO> GetBookByIdAsync(int id)
+        private bool CheckMatch(string title, string author, string subject, Book book)
         {
-            var book = await _bookRepository.GetBookByIdAsync(id);
-            return book == null ? null : MapToDto(book);
-        }
+            bool titleMatch = string.IsNullOrEmpty(title) || book.Title.Contains(title, StringComparison.OrdinalIgnoreCase);
+            bool authorMatch = string.IsNullOrEmpty(author) || book.BookAuthors.Any(a => a.Author.Name.Contains(author, StringComparison.OrdinalIgnoreCase));
+            bool subjectMatch = string.IsNullOrEmpty(subject) || book.BookSubjects.Any(s => s.Subject.Name.Contains(subject, StringComparison.OrdinalIgnoreCase));
 
-        public async Task<BookDTO> CreateBookAsync(BookDTO BookDTO)
-        {
-            var book = MapToEntity(BookDTO);
-            var createdBook = await _bookRepository.CreateBookAsync(book);
-            return MapToDto(createdBook);
-        }
-
-        public async Task<BookDTO> UpdateBookAsync(int id, BookDTO BookDTO)
-        {
-            var book = MapToEntity(BookDTO);
-            var updatedBook = await _bookRepository.UpdateBookAsync(id, book);
-            return updatedBook == null ? null : MapToDto(updatedBook);
-        }
-
-        public async Task<bool> DeleteBookAsync(int id)
-        {
-            return await _bookRepository.DeleteBookAsync(id);
-        }
-
-        private BookDTO MapToDto(Book book)
-        {
-            return new BookDTO
-            {
-                Id = book.Id,
-                Title = book.Title,
-                PublicationDate = book.PublicationDate,
-                Description = book.Description,
-                Author = book.Author
-            };
-        }
-
-        private Book MapToEntity(BookDTO BookDTO)
-        {
-            return new Book
-            {
-                Id = BookDTO.Id,
-                Title = BookDTO.Title,
-                Subtitle = BookDTO.Subtitle,
-                PublicationDate = BookDTO.PublicationDate,
-                Description = BookDTO.Description,
-                Author = BookDTO.Author
-            };
+            return titleMatch && authorMatch && subjectMatch;
         }
     }
 }

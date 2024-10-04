@@ -13,48 +13,40 @@ public class ClientsController : ControllerBase
         _clientService = clientService;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetClients()
+     [HttpGet("{id}")]
+    public async Task<IActionResult> GetClientById(string id)
     {
-        var clients = await _clientService.GetAllClientsAsync();
-        return Ok(clients);
-    }
-
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetClient(int id)
-    {
-        var client = await _clientService.GetClientByIdAsync(id);
+        var client = await _clientService.FindClientById(id);
         if (client == null)
             return NotFound();
-
         return Ok(client);
+    }
+
+    [HttpGet("search")]
+    public async Task<IActionResult> GetClientsByName(string name)
+    {
+        var clients = await _clientService.FindClientsByName(name);
+        if (clients == null || !clients.Any())
+            return NotFound();
+        return Ok(clients);
     }
 
     [HttpPost]
     public async Task<IActionResult> CreateClient(ClientDto clientDto)
     {
-        var createdClient = await _clientService.CreateClientAsync(clientDto);
-        return CreatedAtAction(nameof(GetClient), new { id = createdClient.Id }, createdClient);
+        var result = await _clientService.AddClient(clientDto);
+        if (!result.IsSuccess)
+            return BadRequest(result.Message);
+        return Ok(result.Client);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateClient(int id, ClientDto clientDto)
+    public async Task<IActionResult> EditClient(string id, ClientDto clientData)
     {
-        var updatedClient = await _clientService.UpdateClientAsync(id, clientDto);
-        if (updatedClient == null)
-            return NotFound();
-
-        return Ok(updatedClient);
-    }
-
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteClient(int id)
-    {
-        var success = await _clientService.DeleteClientAsync(id);
-        if (!success)
-            return NotFound();
-
-        return NoContent();
+        var result = await _clientService.EditClient(id, clientData);
+        if (!result.IsSuccess)
+            return BadRequest(result.Message);
+        return Ok(result.Client);
     }
 }
 
