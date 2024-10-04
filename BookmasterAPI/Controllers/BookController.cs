@@ -1,23 +1,56 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
+using Application.Dto;
+using Application.interfaces;
 
-[Route("api/[controller]")]
 [ApiController]
+[Route("api/[controller]")]
 public class BooksController : ControllerBase
 {
-
-    // Метод для поиска книг с фильтрацией по названию, автору и теме
-    [HttpGet]
-    public ActionResult<IEnumerable<string>> GetBooks(string title = null, string author = null, string subject = null, int page = 1, int pageSize = 10)
+    private readonly IBookService _bookService;
+    
+    public BooksController(IBookService bookService)
     {
-        return Ok("Готово");
+        _bookService = bookService;
     }
 
-    // Метод для получения информации о книге по её ID
-    [HttpGet("{id}")]
-    public ActionResult<string> GetBook(string id)
+    [HttpGet]
+    public async Task<IActionResult> GetBooks()
     {
-        return Ok("Готово");
+        var books = await _bookService.GetAllBooksAsync();
+        return Ok(books);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetBookById(int id)
+    {
+        var book = await _bookService.GetBookByIdAsync(id);
+        if (book == null)
+            return NotFound();
+        return Ok(book);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateBook(BookDTO bookDto)
+    {
+        var createdBook = await _bookService.CreateBookAsync(bookDto);
+        return CreatedAtAction(nameof(GetBookById), new { id = createdBook.Id }, createdBook);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateBook(int id, BookDTO bookDto)
+    {
+        var updatedBook = await _bookService.UpdateBookAsync(id, bookDto);
+        if (updatedBook == null)
+            return NotFound();
+        return Ok(updatedBook);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteBook(int id)
+    {
+        var result = await _bookService.DeleteBookAsync(id);
+        if (!result)
+            return NotFound();
+        return NoContent();
     }
 }
