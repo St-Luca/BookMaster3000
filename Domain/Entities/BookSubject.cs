@@ -2,10 +2,10 @@ namespace Domain.Entities
 {
     public class BookSubject
     {
-        public string BookKey { get; set; }  // Foreign Key для книги
+        public int BookId { get; set; }
         public Book Book { get; set; }
 
-        public long SubjectId { get; set; }  // Foreign Key для темы
+        public int SubjectId { get; set; }
         public Subject Subject { get; set; }
     }
 }

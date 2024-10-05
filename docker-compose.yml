@@ -1,12 +1,47 @@
-version: '3.8'
 services:
   postgres.db:
+    restart: always
     image: postgres:latest
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1234
-      POSTGRES_DB: BookmasterDB
+      POSTGRES_DB: bookmaster_DB
     ports:
       - "5432:5432"
+    networks:
+      - network
     volumes:
-      - ./data:/var/lib/postgresql/data
+      - ./BookmasterAPI/SqlInitialize/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5051:80"
+    depends_on:
+      - postgres.db
+    networks:
+      - network
+
+  webapp:
+    image: api
+    build:
+      context: .
+      dockerfile: BookmasterAPI/DockerFile
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=postgres.db;Port=5432;Database=bookmaster_DB;Username=postgres;Password=1234"
+      ASPNETCORE_ENVIRONMENT: Development
+    depends_on:
+      - postgres.db
+    ports:
+      - "8080:8080"
+      - "443:443"
+    networks:
+      - network
+
+volumes:
+  postgres-data:
+networks:
+  network:

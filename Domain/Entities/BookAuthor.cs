@@ -2,10 +2,10 @@ namespace Domain.Entities
 {
     public class BookAuthor
     {
-        public int BookKey { get; set; }
+        public int BookId { get; set; }
         public Book Book { get; set; }
 
-        public int AuthorKey { get; set; }
+        public int AuthorId { get; set; }
         public Author Author { get; set; }
     }
 }

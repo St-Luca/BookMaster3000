@@ -34,7 +34,7 @@ namespace Application.Services
             bool authorMatch = string.IsNullOrEmpty(author) || book.BookAuthors.Any(a => a.Author.Name.Contains(author, StringComparison.OrdinalIgnoreCase));
             bool subjectMatch = string.IsNullOrEmpty(subject) || book.BookSubjects.Any(s => s.Subject.Name.Contains(subject, StringComparison.OrdinalIgnoreCase));
 
-            return titleMatch && authorMatch && subjectMatch;
+            return titleMatch || authorMatch || subjectMatch;
         }
     }
 }

@@ -14,7 +14,7 @@ public class ClientsController : ControllerBase
     }
 
      [HttpGet("{id}")]
-    public async Task<IActionResult> GetClientById(string id)
+    public async Task<IActionResult> GetClientById(int id)
     {
         var client = await _clientService.FindClientById(id);
         if (client == null)
@@ -41,7 +41,7 @@ public class ClientsController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> EditClient(string id, ClientDto clientData)
+    public async Task<IActionResult> EditClient(int id, ClientDto clientData)
     {
         var result = await _clientService.EditClient(id, clientData);
         if (!result.IsSuccess)

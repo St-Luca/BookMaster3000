@@ -2,7 +2,7 @@ namespace Domain.Entities
 {
     public class Author
     {
-        public int Key { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Bio { get; set; }
         public string BirthDate { get; set; }

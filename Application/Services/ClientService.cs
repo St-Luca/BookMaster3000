@@ -14,7 +14,7 @@ namespace Application.Services
             _clientRepository = clientRepository;
         }
 
-        public async Task<ClientDto> FindClientById(string id)
+        public async Task<ClientDto> FindClientById(int id)
         {
             var client = await _clientRepository.GetClientById(id);
             if (client == null) return null;
@@ -82,7 +82,7 @@ namespace Application.Services
             return (true, null, clientDto);
         }
 
-        public async Task<(bool IsSuccess, string Message, ClientDto Client)> EditClient(string id, ClientDto clientData)
+        public async Task<(bool IsSuccess, string Message, ClientDto Client)> EditClient(int id, ClientDto clientData)
         {
             var client = await _clientRepository.GetClientById(id);
             if (client == null)

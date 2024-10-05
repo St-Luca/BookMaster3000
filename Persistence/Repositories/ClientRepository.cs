@@ -13,7 +13,7 @@ namespace Persistence.Repositories
         _context = context;
     }
 
-    public async Task<Client> GetClientById(string id)
+    public async Task<Client> GetClientById(int id)
     {
         return await _context.Clients.FindAsync(id);
     }
