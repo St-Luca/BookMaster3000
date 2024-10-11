@@ -77,12 +77,37 @@ VALUES ('Пример обложки');
 
 INSERT INTO "Books" ("Title", "Subtitle", "Description", "PublicationDate", "CoverId") 
 VALUES 
-('Книга 1', 'Подзаголовок 1', 'Описание книги 1', '2024-10-01', 1),
-('Книга 2', 'Подзаголовок 2', 'Описание книги 2', '2024-10-02', NULL),
-('Книга 3', 'Подзаголовок 3', 'Описание книги 3', '2024-10-03', NULL);
+('Harry Potter', 'A young wizard discovering his powers', 'A young wizard discovering his powers', '1997-06-26', NULL),
+('The Hobbit', 'A hobbit goes on an unexpected journey', 'A hobbit goes on an unexpected journey', '1937-09-21', NULL),
+('1984', 'A dystopian future novel', 'A dystopian future novel', '1949-06-08', NULL);
 
 INSERT INTO "Clients" ("Name", "City", "Zip", "Address", "Email", "Phone") 
 VALUES 
 ('Иван Иванов', 'Москва', '101000', 'ул. Пушкина, д. 1', 'ivan.ivanov@example.com', '1234567890'),
 ('Анна Смирнова', 'Санкт-Петербург', '190000', 'ул. Ленина, д. 2', 'anna.smirnova@example.com', '0987654321'),
 ('Петр Петров', 'Екатеринбург', '620000', 'ул. Чехова, д. 3', 'petr.petrov@example.com', '1357924680');
+
+INSERT INTO "Authors" ("Name")
+VALUES 
+('J.K. Rowling'),
+('J.R.R. Tolkien'),
+('George Orwell');
+
+INSERT INTO "Subjects" ("Name")
+VALUES 
+('Fantasy'),
+('Adventure'),
+('Dystopia');
+
+INSERT INTO "BookAuthors" ("BookId", "AuthorId")
+VALUES 
+((SELECT "Id" FROM "Books" WHERE "Title" = 'Harry Potter'), (SELECT "Id" FROM "Authors" WHERE "Name" = 'J.K. Rowling')),
+((SELECT "Id" FROM "Books" WHERE "Title" = 'The Hobbit'), (SELECT "Id" FROM "Authors" WHERE "Name" = 'J.R.R. Tolkien')),
+((SELECT "Id" FROM "Books" WHERE "Title" = '1984'), (SELECT "Id" FROM "Authors" WHERE "Name" = 'George Orwell'));
+
+INSERT INTO "BookSubjects" ("BookId", "SubjectId")
+VALUES 
+((SELECT "Id" FROM "Books" WHERE "Title" = 'Harry Potter'), (SELECT "Id" FROM "Subjects" WHERE "Name" = 'Fantasy')),
+((SELECT "Id" FROM "Books" WHERE "Title" = 'The Hobbit'), (SELECT "Id" FROM "Subjects" WHERE "Name" = 'Fantasy')),
+((SELECT "Id" FROM "Books" WHERE "Title" = '1984'), (SELECT "Id" FROM "Subjects" WHERE "Name" = 'Dystopia'));
+

@@ -15,10 +15,7 @@ namespace Persistence.Repositories
 
         public List<Book> GetBooks()
         {
-            return _context.Books
-                .Include(b => b.BookAuthors)
-                .Include(b => b.BookSubjects)
-                .ToList();
+            return _context.Books.Include(b => b.BookAuthors).ThenInclude(ba => ba.Author).Include(b => b.BookSubjects).ThenInclude(bs => bs.Subject).ToList();
         }
     }
 }
