@@ -2,7 +2,11 @@
 import type { Book } from '~/entities/book';
 import BookCard from '~/widgets/browse-layout/ui/BookCard.vue';
 import BooksList from '~/widgets/browse-layout/ui/BooksList.vue';
-import InputFields from '~/widgets/browse-layout/ui/SearchParams.vue';
+import SearchParams from '~/widgets/browse-layout/ui/SearchParams.vue';
+
+definePageMeta({
+  layout: 'full-height'
+})
 
 const mockupList = ref<Book[]>([
   {
@@ -144,8 +148,8 @@ const handleBookSelect = (book: Book) => {
 </script>
 
 <template>
-  <div class="flex gap-4 h-[100vh] p-4">
-    <InputFields class="w-[30%]"></InputFields>
+  <div class="flex gap-4">
+    <SearchParams class="w-[30%]"></SearchParams>
     <div class="grow flex flex-col gap-4">
       <BooksList
         :list="mockupList"

@@ -41,7 +41,7 @@ const rows = computed<Row[]>(() => props.list.map(book => ({
 
 <template>
   <UCard
-    class="relative overflow-y-scroll pt-0"
+    class="relative overflow-y-scroll"
     :ui="{
       body: {
         padding: 'pt-0 md:pt-0 pb-3 md:pb-3 pr-3 md:pr-3',
