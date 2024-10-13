@@ -34,7 +34,7 @@ const items = ref([
       }"
     >
       <template #default>
-        <div class="flex gap-2">
+        <nav class="flex gap-2">
           <template v-for="item in items">
             <UDropdown
               v-if="item.dropdown"
@@ -56,7 +56,7 @@ const items = ref([
               class="hover:bg-gray-100"
             />
           </template>
-        </div>
+        </nav>
       </template>
     </UCard>
   </header>

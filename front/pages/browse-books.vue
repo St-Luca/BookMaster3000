@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import type { Book } from '~/entities/book';
-import BookCard from '~/widgets/browse-layout/ui/BookCard.vue';
-import BooksList from '~/widgets/browse-layout/ui/BooksList.vue';
-import SearchParams from '~/widgets/browse-layout/ui/SearchParams.vue';
+import { BookCard, BooksList, SearchParams } from '~/widgets/browse-books';
 
 definePageMeta({
   layout: 'full-height'

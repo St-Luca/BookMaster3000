@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { Author } from '~/entities/author';
 import type { Book } from '~/entities/book';
-import { DetailInfo } from '~/features/browse-books';
+import { DetailInfo } from '~/features/browse';
 import { parseDate } from '~/shared/util';
 
 const props = defineProps<{
