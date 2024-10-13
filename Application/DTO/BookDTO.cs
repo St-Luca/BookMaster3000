@@ -9,9 +9,9 @@ namespace Application.Dto
 
         public string Subtitle {get; set;}
 
-        public string PublicationDate {get; set;}
+        public DateTime PublicationDate {get; set;}
 
-        public List<string> BookAuthors { get; set; }
-        public List<string> BookSubjects { get; set; }
+        public List<string> BookAuthors { get; set; } = new List<string>();
+        public List<string> BookSubjects { get; set; } = new List<string>();
     }
 }

@@ -16,25 +16,54 @@ namespace Application.Services
 
         public List<BookDto> FindBooks(string title, string author, string subject)
         {
-            var books = _bookRepository.GetBooks();
 
-            return books
+            // Подгружаем все книги вместе с авторами и темами
+            var books = _bookRepository.GetBooks().ToList();
+
+            // Применяем логику фильтрации с помощью CheckMatch
+            var filteredBooks = books
                 .Where(book => CheckMatch(title, author, subject, book))
-                .Select(book => new BookDto
-                {
-                    Title = book.Title,
-                    BookAuthors = book.BookAuthors.Select(a => a.Author.Name).ToList(),
-                    BookSubjects = book.BookSubjects.Select(s => s.Subject.Name).ToList(),
-                }).ToList();
+                .ToList();
+
+            // Преобразуем книги в DTO
+            return filteredBooks.Select(book => new BookDto
+            {
+                Id = book.Id,
+                Title = book.Title,
+                Subtitle = book.Subtitle,
+                BookAuthors = book.BookAuthors.Select(ba => ba.Author.Name).ToList(),
+                BookSubjects = book.BookSubjects.Select(bs => bs.Subject.Name).ToList(),
+                PublicationDate = book.PublicationDate,
+                Description = book.Description
+            }).ToList();
+
         }
 
         private bool CheckMatch(string title, string author, string subject, Book book)
         {
-            bool titleMatch = string.IsNullOrEmpty(title) || book.Title.Contains(title, StringComparison.OrdinalIgnoreCase);
-            bool authorMatch = string.IsNullOrEmpty(author) || book.BookAuthors.Any(a => a.Author.Name.Contains(author, StringComparison.OrdinalIgnoreCase));
-            bool subjectMatch = string.IsNullOrEmpty(subject) || book.BookSubjects.Any(s => s.Subject.Name.Contains(subject, StringComparison.OrdinalIgnoreCase));
 
+            bool titleMatch = string.IsNullOrEmpty(title) || 
+                      (book.Title != null && book.Title.Contains(title, StringComparison.OrdinalIgnoreCase));
+
+            bool authorMatch = false;
+            if(book.BookAuthors.Any()) {
+            authorMatch = string.IsNullOrEmpty(author) || 
+                            (book.BookAuthors != null && 
+                            book.BookAuthors.Any(a => a.Author != null && 
+                            a.Author.Name != null && 
+                            a.Author.Name.Contains(author, StringComparison.OrdinalIgnoreCase)));
+            }
+            bool subjectMatch = false;
+            if(book.BookSubjects.Any()) {
+            subjectMatch = string.IsNullOrEmpty(subject) || 
+                                (book.BookSubjects != null && 
+                                book.BookSubjects.Any(s => s.Subject != null && 
+                                s.Subject.Name != null && 
+                                s.Subject.Name.Contains(subject, StringComparison.OrdinalIgnoreCase)));
+            }
+        
             return titleMatch || authorMatch || subjectMatch;
+
         }
     }
 }
