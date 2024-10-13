@@ -1,41 +1,22 @@
-<script lang="ts" setup>
-import type { Book } from '~/entities/book';
-
-const props = defineProps<{
-  list: Book[],
-  viewedBook?: Book,
-}>();
-
-const emit = defineEmits([ 'bookSelect' ]);
-
-interface Row {
-  ref: Book;
-  name: string;
-  author: string;
-  class: string;
-}
+<script lang="ts" setup generic="ListedType, RowsType extends {ref: ListedType}">
 
 interface Col {
-  key: keyof Row;
+  key: string;
   label: string;
 }
 
-const cols = ref<Col[]>([
-  {
-    label: 'Название',
-    key: 'name'
-  },
-  {
-    label: 'Авторы',
-    key: 'author'
-  }
-])
+const props = defineProps<{
+  list: ListedType[],
+  highlightedItem?: ListedType,
+  rows: (item:ListedType) => RowsType,
+  cols: Col[],
+}>();
 
-const rows = computed<Row[]>(() => props.list.map(book => ({
-  ref: book,
-  name: book.title,
-  author: book.authors.map(author => author.name).join(', '),
-  class: props.viewedBook && book.key === props.viewedBook?.key ? 'bg-blue-50 hover:bg-blue-50' : '',
+const emit = defineEmits([ 'select' ]);
+
+const rows = computed(() => props.list.map(item => ({
+  ...props.rows(item),
+  class: props.highlightedItem && item === props.highlightedItem ? 'bg-blue-50 hover:!bg-blue-50' : '',
 })))
 </script>
 
@@ -49,7 +30,7 @@ const rows = computed<Row[]>(() => props.list.map(book => ({
     }"
   >
     <UTable
-      :columns="cols"
+      :columns="(cols as any)"
       :rows="rows"
       :ui="{
         wrapper: ({ base: '' } as any),
@@ -69,7 +50,7 @@ const rows = computed<Row[]>(() => props.list.map(book => ({
           base: 'hover:bg-gray-100 duration-100',
         },
       }"
-      @select="(row:Row) => emit('bookSelect', row.ref)"
+      @select="(row:RowsType) => emit('select', row.ref)"
     />
   </UCard>
 </template> 

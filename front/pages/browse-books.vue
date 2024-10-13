@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { Book } from '~/entities/book';
-import { BookCard, BooksList, SearchParams } from '~/widgets/browse-books';
+import { BrowseLayout, BrowseList } from '~/features/browse';
+import { BookCard, BookSearchParams } from '~/widgets/browse-books';
 
 definePageMeta({
   layout: 'full-height'
@@ -143,23 +144,46 @@ const handleBookSelect = (book: Book) => {
   viewedBook.value = book;
 }
 
+const cols = ref([
+  {
+    label: 'Название',
+    key: 'name'
+  },
+  {
+    label: 'Авторы',
+    key: 'author'
+  }
+])
+
+const rows = (book:Book) => ({
+  ref: book,
+  name: book.title,
+  author: book.authors.map(author => author.name).join(', '),
+})
+
 </script>
 
 <template>
-  <div class="flex gap-4">
-    <SearchParams class="w-[30%]"></SearchParams>
-    <div class="grow flex flex-col gap-4">
-      <BooksList
+  <BrowseLayout>
+    <template #sidebar>
+      <BookSearchParams class="h-full"></BookSearchParams>
+    </template>
+    <template #top>
+      <BrowseList
         :list="mockupList"
-        class="h-[40%]"
-        :viewedBook="viewedBook"
-        @bookSelect="handleBookSelect"
+        :rows="rows"
+        :cols="cols"
+        :highlightedItem="viewedBook"
+        @select="handleBookSelect"
+        class="h-full"
       />
+    </template>
+    <template #bottom>
       <BookCard
         :book="viewedBook"
-        class="grow"
         :key="viewedBook?.key"
+        class="h-full"
       />
-    </div>
-  </div>
+    </template>
+  </BrowseLayout>
 </template>
