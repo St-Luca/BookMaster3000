@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import type { Book } from '~/entities/book';
-import BookCard from '~/features/browse-books/ui/BookCard.vue';
-import BooksList from '~/features/browse-books/ui/BooksList.vue';
-import InputFields from '~/features/browse-books/ui/SearchParams.vue';
+import BookCard from '~/widgets/browse-layout/ui/BookCard.vue';
+import BooksList from '~/widgets/browse-layout/ui/BooksList.vue';
+import InputFields from '~/widgets/browse-layout/ui/SearchParams.vue';
 
 const mockupList = ref<Book[]>([
   {
@@ -156,6 +156,7 @@ const handleBookSelect = (book: Book) => {
       <BookCard
         :book="viewedBook"
         class="grow"
+        :key="viewedBook?.key"
       />
     </div>
   </div>
