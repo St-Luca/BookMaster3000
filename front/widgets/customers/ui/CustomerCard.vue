@@ -3,6 +3,7 @@ import type { Author } from '~/entities/author';
 import type { Customer } from '~/entities/customer';
 import { DetailInfo } from '~/features/browse';
 import { parseDate } from '~/shared/util';
+import { CustomerModal } from '..';
 
 const props = defineProps<{
   customer?: Customer,
@@ -15,6 +16,8 @@ const params = ref({
   phone: "Телефон", 
   email: "E-mail",
 })
+
+const isOpenModal = ref(false);
 </script>
 
 <template>
@@ -31,6 +34,7 @@ const params = ref({
             <h4 class="text-lg">Данные:</h4>
             <div
               class="text-sm text-gray-500 hover:underline hover:text-gray-600 cursor-pointer"
+              @click="isOpenModal = true"
             >
               Изменить
             </div>
@@ -55,5 +59,7 @@ const params = ref({
     >
       Выберите клиента для просмотра
     </div>
+
+    <CustomerModal v-model="isOpenModal" :initialObject="customer"></CustomerModal>
   </UCard>
 </template>

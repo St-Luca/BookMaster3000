@@ -2,8 +2,7 @@
 import type { Book } from '~/entities/book';
 import type { Customer } from '~/entities/customer';
 import { BrowseLayout, BrowseList } from '~/features/browse';
-import { CustomerSearchParams } from '~/widgets/browse-customers';
-import CustomerCard from '~/widgets/browse-customers/ui/CustomerCard.vue';
+import { CustomerSearchParams, CustomerCard } from '~/widgets/customers';
 
 definePageMeta({
   layout: 'full-height'

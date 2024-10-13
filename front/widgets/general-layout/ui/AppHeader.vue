@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { CustomerModal } from '~/widgets/customers';
+
 
 const items = ref([
   {
@@ -15,12 +17,14 @@ const items = ref([
       },
       {
         label: "Добавить",
-        to: "/browse-customers",
+        click: () => isOpenCustomerModal.value = true,
         class: "bg-white hover:bg-gray-50"
       },
     ]]
   }
-])
+]);
+
+const isOpenCustomerModal = ref(false);
 
 </script>
 
@@ -46,6 +50,9 @@ const items = ref([
                 color="black"
                 class="hover:bg-gray-100"
               />
+              <template #item="{ item }">
+                <span @click="() => { if (item.click) item.click() }">{{ item.label }}</span>
+              </template>
             </UDropdown>
             <UButton
               v-else
@@ -59,5 +66,6 @@ const items = ref([
         </nav>
       </template>
     </UCard>
+    <CustomerModal v-model="isOpenCustomerModal"></CustomerModal>
   </header>
 </template>
