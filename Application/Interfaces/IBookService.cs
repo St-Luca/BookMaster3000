@@ -1,9 +1,8 @@
 using Application.Dto;
 
-namespace Application.interfaces
+namespace Application.Interfaces;
+
+public interface IBookService
 {
-    public interface IBookService
-    {
-        List<BookDto> FindBooks(string title, string author, string subject);
-    }
+    List<BookDto> FindBooks(string title, string author, string subject);
 }

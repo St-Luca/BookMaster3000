@@ -1,9 +1,8 @@
 using Domain.Entities;
 
-namespace Persistence.interfaces
+namespace Persistence.Interfaces;
+
+public interface IBookRepository
 {
-    public interface IBookRepository
-    {
-        List<Book> GetBooks();
-    }
+    List<Book> GetBooks();
 }

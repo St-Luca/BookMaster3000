@@ -1,20 +1,41 @@
 ﻿using Application.Dto;
 using Domain.Entities;
-using Application.interfaces;
-using Persistence.interfaces;
+using Application.Interfaces;
+using Persistence.Interfaces;
 
-namespace Application.Services
+namespace Application.Services;
+
+public class BookService(IBookRepository _bookRepository) : IBookService
 {
-    public class BookService : IBookService
+    public List<BookDto> FindBooks(string title, string author, string subject)
     {
-        private readonly IBookRepository _bookRepository;
+        var books = _bookRepository.GetBooks().ToList();
 
-        public BookService(IBookRepository bookRepository)
+        var filteredBooks = books
+            .Where(book => CheckMatch(title, author, subject, book))
+            .ToList();
+
+        return filteredBooks.Select(book => new BookDto
         {
-            _bookRepository = bookRepository;
-        }
+            Id = book.Id,
+            Title = book.Title,
+            Subtitle = book.Subtitle,
+            BookAuthors = book.BookAuthors.Select(ba => ba.Author.Name).ToList(),
+            BookSubjects = book.BookSubjects.Select(bs => bs.Subject.Name).ToList(),
+            PublicationDate = book.PublicationDate.ToShortDateString(),
+            Description = book.Description
+        }).ToList();
+    }
 
-        public List<BookDto> FindBooks(string title, string author, string subject)
+    private bool CheckMatch(string title, string author, string subject, Book book)
+    {
+
+        bool titleMatch = string.IsNullOrEmpty(title) || 
+                  (book.Title != null && book.Title.Contains(title, StringComparison.OrdinalIgnoreCase));
+
+        bool authorMatch = false;
+
+        if(book.BookAuthors.Count != 0) 
         {
 
             var books = _bookRepository.GetBooks().ToList();
@@ -62,5 +83,6 @@ namespace Application.Services
             return titleMatch && authorMatch && subjectMatch;
 
         }
+
     }
 }
