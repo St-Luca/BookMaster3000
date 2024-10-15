@@ -10,3 +10,9 @@ export interface Book {
   subjects?: string[];
   authors: Author[];
 }
+
+export interface BookSearchParams {
+  name?: string;
+  title?: string;
+  subject?: string;
+}

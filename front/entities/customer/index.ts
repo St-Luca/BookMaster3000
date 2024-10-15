@@ -1,1 +1,3 @@
-export { type Customer } from "./model/customer"
+export type { Customer, CreatedCustomer } from "./types"
+
+export { createCustomer } from "./api/create"

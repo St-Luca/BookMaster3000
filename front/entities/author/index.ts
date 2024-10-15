@@ -1,1 +1,1 @@
-export { type Author } from "./model/author"
+export { type Author } from "./types"

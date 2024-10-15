@@ -1,1 +1,1 @@
-export { type CirculationRecord } from "./model/circulation-record"
+export { type CirculationRecord } from "./types"

@@ -1,1 +1,1 @@
-export { type Book } from "./model/book"
+export { type Book } from "./types"

@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import { object, string, type InferType } from 'yup';
-import type { Customer } from '~/entities/customer';
+import {
+  type Customer,
+  type CreatedCustomer,
+  createCustomer
+} from '~/entities/customer';
 
 const props = defineProps<{
   modelValue: boolean,
   initialObject?: Customer,
 }>();
 
-const localModal = computed({
+const localModel = computed({
   get: () => props.modelValue,
   set: (value) => {
     emit('update:modelValue', value);
@@ -20,10 +24,10 @@ const emit = defineEmits<{
 
 watch(() => props.modelValue, (newVal) => emit('update:modelValue', newVal));
 
-const model = ref<Customer>();
+const customer = ref<Customer>();
 
 onBeforeMount(() => {
-  model.value = {
+  customer.value = {
     id: props.initialObject?.name ?? '',
     name: props.initialObject?.name ?? '',
     address: props.initialObject?.address ?? '',
@@ -38,34 +42,37 @@ const requiredString = "Обязательное поле";
 
 const schema = object({
   name: string().required(requiredString),
-  address: string().required(requiredString),
-  zip: string()
-    .min(6, 'Некорректный индекс')
-    .required(requiredString),
-  city: string().required(requiredString),
   phone: string().required(requiredString),
   email: string().email('Некорректный E-mail').required(requiredString),
 })
 
-const fields = ref({
+const fields = ref<{[key in keyof CreatedCustomer]: string}>({
   name: "Имя",
-  address: "Адрес",
-  zip: "Почтовый индекс",
-  city: "Город",
   phone: "Телефон",
   email: "E-mail",
-})
+  city: "Город",
+  address: "Адрес",
+  zip: "Почтовый индекс",
+});
+
+const handleSubmit = () => {
+  if (!schema.isValidSync(customer.value)) {
+    schema.validateSync(customer.value, { abortEarly: false });
+    return;
+  }
+  createCustomer(customer.value);
+}
 
 </script>
 
 <template>
   <UModal
-    v-model="localModal"
+    v-model="localModel"
   >
     <UCard>
-      <UForm :schema="schema" :state="model!" class="space-y-4" @submit="">
+      <UForm :schema="schema" :state="customer!" class="space-y-4" @submit="handleSubmit">
         <UFormGroup v-for="label,key in fields" :label="label" :name="key">
-          <UInput v-model="(model![key] as string)" />
+          <UInput v-model="(customer![key] as string)" />
         </UFormGroup>
   
         <UButton type="submit" class="w-full justify-center">
