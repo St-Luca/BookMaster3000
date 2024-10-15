@@ -19,6 +19,25 @@ public class Program
         builder.Services.AddScoped<IClientService, ClientService>();
         builder.Services.AddScoped<IClientRepository, ClientRepository>();
 
+        builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+                options.JsonSerializerOptions.DictionaryKeyPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+            });
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowSpecificOrigins",
+                policy =>
+                {
+                    policy.WithOrigins("http://localhost:3000", "http://localhost:5604")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+                });
+        });
+
         builder.Services.AddAuthorization();
         builder.Services.AddControllers();
         builder.Services.AddDbContext<LibraryContext>(options =>
@@ -26,6 +45,8 @@ public class Program
 
 
         var app = builder.Build();
+
+        app.UseCors("AllowSpecificOrigins");
 
         app.UseSwagger();
         app.UseSwaggerUI(c =>
