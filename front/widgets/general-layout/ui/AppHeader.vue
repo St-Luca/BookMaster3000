@@ -16,7 +16,7 @@ const items = ref([
         class: "bg-white hover:bg-gray-50"
       },
       {
-        label: "Добавить",
+        label: "Создать",
         click: () => isOpenCustomerModal.value = true,
         class: "bg-white hover:bg-gray-50"
       },

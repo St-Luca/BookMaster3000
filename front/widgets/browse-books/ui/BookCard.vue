@@ -108,7 +108,7 @@ const authorYears = computed<string|undefined>(() => {
     </div>
     <div
       v-else
-      class="flex justify-center items-center h-full"
+      class="absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center h-full"
     >
       Выберите книгу для просмотра
     </div>

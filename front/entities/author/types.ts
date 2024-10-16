@@ -1,5 +1,5 @@
 export interface Author {
-  key: string;
+  id: number;
   name: string;
   bio?: string;
   birthDate?: string;

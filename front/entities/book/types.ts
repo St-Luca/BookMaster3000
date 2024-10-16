@@ -1,7 +1,7 @@
 import type { Author } from "~/entities/author";
 
 export interface Book {
-  key: string;
+  id: number;
   title: string;
   subtitle: string;
   description: string;
@@ -12,7 +12,7 @@ export interface Book {
 }
 
 export interface BookSearchParams {
-  name?: string;
   title?: string;
+  author?: string;
   subject?: string;
 }

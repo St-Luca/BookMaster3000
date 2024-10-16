@@ -1,30 +1,35 @@
 import type { CirculationRecord } from "~/entities/circulation-record";
 
 export interface Customer {
-  id: String;
-  name: String;
-  phone: String;
-  email: String;
-  city?: String;
-  address?: String;
-  zip?: String;
+  id: string;
+  name: string;
+  phone: string;
+  email: string;
+  city?: string;
+  address?: string;
+  zip?: string;
   // circulation: CirculationRecord[];
 }
 
+export interface CustomerSearchParams {
+  id?: string;
+  name?: string;
+}
+
 export interface CreatedCustomer {
-  name: String;
-  phone: String;
-  email: String;
-  city?: String;
-  address?: String;
-  zip?: String;
+  name: string;
+  phone: string;
+  email: string;
+  city?: string;
+  address?: string;
+  zip?: string;
 }
 
 export interface EditedCustomer {
-  name: String;
-  phone: String;
-  email: String;
-  city?: String;
-  address?: String;
-  zip?: String;
+  name: string;
+  phone: string;
+  email: string;
+  city?: string;
+  address?: string;
+  zip?: string;
 }

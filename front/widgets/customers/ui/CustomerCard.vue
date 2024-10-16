@@ -55,11 +55,15 @@ const isOpenModal = ref(false);
     </div>
     <div
       v-else
-      class="flex justify-center items-center h-full"
+      class="absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center h-full"
     >
       Выберите клиента для просмотра
     </div>
 
-    <CustomerModal v-model="isOpenModal" :initialObject="customer"></CustomerModal>
+    <CustomerModal
+      v-model="isOpenModal"
+      :initialObject="customer"
+      :key="(customer?.id as any)"
+    />
   </UCard>
 </template>

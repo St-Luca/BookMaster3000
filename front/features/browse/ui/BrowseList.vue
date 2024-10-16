@@ -1,4 +1,4 @@
-<script lang="ts" setup generic="ListedType, RowsType extends {ref: ListedType}">
+<script lang="ts" setup generic="ListedType extends { id: any }, RowsType extends {ref: ListedType}">
 
 interface Col {
   key: string;
@@ -6,7 +6,7 @@ interface Col {
 }
 
 const props = defineProps<{
-  list: ListedType[],
+  list: ListedType[]|undefined,
   highlightedItem?: ListedType,
   rows: (item:ListedType) => RowsType,
   cols: Col[],
@@ -14,10 +14,15 @@ const props = defineProps<{
 
 const emit = defineEmits([ 'select' ]);
 
-const rows = computed(() => props.list.map(item => ({
+const rows = computed(() => props.list?.map(item => ({
   ...props.rows(item),
-  class: props.highlightedItem && item === props.highlightedItem ? 'bg-blue-50 hover:!bg-blue-50' : '',
-})))
+  class: props.highlightedItem && item.id === props.highlightedItem.id ? 'bg-blue-50 hover:!bg-blue-50' : '',
+})) ?? [])
+
+const emptyText = computed(() => props.list === undefined
+  ? 'Введите запрос для поиска'
+  : 'Ничего не найдено'
+)
 </script>
 
 <template>
@@ -32,6 +37,7 @@ const rows = computed(() => props.list.map(item => ({
     <UTable
       :columns="(cols as any)"
       :rows="rows"
+      :empty-state="{ icon: 'i-heroicons-circle-stack-20-solid', label: emptyText }"
       :ui="{
         wrapper: ({ base: '' } as any),
         base: 'divide-y-0',
