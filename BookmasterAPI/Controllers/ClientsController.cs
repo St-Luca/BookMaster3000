@@ -18,7 +18,7 @@ public class ClientsController : ControllerBase
     {
         var client = await _clientService.FindClientById(id);
         if (client == null)
-            return NotFound();
+            return Ok(new List<ClientDto>());
         return Ok(client);
     }
 
@@ -27,7 +27,7 @@ public class ClientsController : ControllerBase
     {
         var clients = await _clientService.FindClientsByName(name);
         if (clients == null || !clients.Any())
-            return NotFound();
+            return Ok(new List<ClientDto>());
         return Ok(clients);
     }
 
