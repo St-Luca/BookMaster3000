@@ -18,7 +18,7 @@ public class BooksController : ControllerBase
     {
         var books = _bookService.FindBooks(title, author, subject);
         if (books == null || !books.Any())
-            return NotFound("No books found with the provided criteria.");
+            return Ok(new List<BookDto>());
         return Ok(books);
     }
 
