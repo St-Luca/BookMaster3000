@@ -5,7 +5,6 @@ namespace Domain.Entities
         public int Id { get; set; } 
         public int BookId { get; set; }
         public int ClientId { get; set; }
-        public int AdminId { get; set; }
         public DateTime IssueFrom { get; set; }
         public DateTime IssueTo { get; set; }
         public DateTime? ReturnDate { get; set; }

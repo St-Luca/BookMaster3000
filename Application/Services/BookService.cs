@@ -17,15 +17,12 @@ namespace Application.Services
         public List<BookDto> FindBooks(string title, string author, string subject)
         {
 
-            // Подгружаем все книги вместе с авторами и темами
             var books = _bookRepository.GetBooks().ToList();
 
-            // Применяем логику фильтрации с помощью CheckMatch
             var filteredBooks = books
                 .Where(book => CheckMatch(title, author, subject, book))
                 .ToList();
 
-            // Преобразуем книги в DTO
             return filteredBooks.Select(book => new BookDto
             {
                 Id = book.Id,
@@ -45,7 +42,7 @@ namespace Application.Services
             bool titleMatch = string.IsNullOrEmpty(title) || 
                       (book.Title != null && book.Title.Contains(title, StringComparison.OrdinalIgnoreCase));
 
-            bool authorMatch = false;
+            bool authorMatch = true;
             if(book.BookAuthors.Any()) {
             authorMatch = string.IsNullOrEmpty(author) || 
                             (book.BookAuthors != null && 
@@ -53,7 +50,7 @@ namespace Application.Services
                             a.Author.Name != null && 
                             a.Author.Name.Contains(author, StringComparison.OrdinalIgnoreCase)));
             }
-            bool subjectMatch = false;
+            bool subjectMatch = true;
             if(book.BookSubjects.Any()) {
             subjectMatch = string.IsNullOrEmpty(subject) || 
                                 (book.BookSubjects != null && 
@@ -62,7 +59,7 @@ namespace Application.Services
                                 s.Subject.Name.Contains(subject, StringComparison.OrdinalIgnoreCase)));
             }
         
-            return titleMatch || authorMatch || subjectMatch;
+            return titleMatch && authorMatch && subjectMatch;
 
         }
     }

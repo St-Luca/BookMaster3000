@@ -14,7 +14,7 @@ public class BooksController : ControllerBase
     }
 
     [HttpGet("search")]
-    public ActionResult<List<BookDto>> SearchBooks(string title, string author, string subject)
+    public ActionResult<List<BookDto>> SearchBooks(string title = null, string author = null, string subject = null)
     {
         var books = _bookService.FindBooks(title, author, subject);
         if (books == null || !books.Any())
