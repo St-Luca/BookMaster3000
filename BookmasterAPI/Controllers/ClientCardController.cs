@@ -13,7 +13,7 @@ public class ClientCardController(IClientCardService _clientService) : Controlle
 
         if (client == null)
         {
-            return Ok(new ClientDto())
+            return Ok(new ClientCardDto());
         }
 
         return Ok(client);
@@ -26,7 +26,7 @@ public class ClientCardController(IClientCardService _clientService) : Controlle
 
         if (clients == null || !clients.Any())
         {
-            return Ok(new List<ClientDto>());
+            return Ok(new List<ClientCardDto>());
         }
 
         return Ok(clients);
