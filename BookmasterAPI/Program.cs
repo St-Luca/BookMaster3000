@@ -1,9 +1,9 @@
-using Persistence.Repositories;
+using Application;
+using Application.Interfaces;
 using Application.Services;
 using Microsoft.EntityFrameworkCore;
-using Application.Interfaces;
 using Persistence.Interfaces;
-using Application;
+using Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 

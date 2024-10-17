@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using Application.Dto;
 using Application.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -68,6 +68,6 @@ public class ClientCardController(IClientCardService _clientService) : Controlle
             return BadRequest(result.Message);
         }
 
-        return Ok();
+        return Ok(result.Record);
     }
 }

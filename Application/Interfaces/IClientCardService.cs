@@ -1,4 +1,5 @@
 using Application.Dto;
+using Application.DTO;
 namespace Application.Interfaces;
 
 public interface IClientCardService
@@ -7,5 +8,5 @@ public interface IClientCardService
     Task<List<ClientCardDto>> FindClientsByName(string name);
     Task<(bool IsSuccess, string Message, ClientCardDto? Client)> AddClient(ClientCardDto clientData);
     Task<(bool IsSuccess, string Message, ClientCardDto? Client)> EditClient(int id, ClientCardDto clientData);
-    Task<(bool IsSuccess, string Message, ClientCardDto? Client)> RenewBook(int clientId, int bookId);
+    Task<(bool IsSuccess, string Message, CirculationRecord? Record)> RenewBook(int clientId, int bookId);
 }

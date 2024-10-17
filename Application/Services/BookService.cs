@@ -1,6 +1,6 @@
 ﻿using Application.Dto;
-using Domain.Entities;
 using Application.Interfaces;
+using Domain.Entities;
 using Persistence.Interfaces;
 
 namespace Application.Services;
@@ -22,7 +22,7 @@ public class BookService(IBookRepository _bookRepository) : IBookService
             Subtitle = book.Subtitle,
             BookAuthors = book.BookAuthors.Select(ba => ba.Author.Name).ToList(),
             BookSubjects = book.BookSubjects.Select(bs => bs.Subject.Name).ToList(),
-            PublicationDate = book.PublicationDate.ToShortDateString(),
+            PublicationDate = book.PublicationDate,
             Description = book.Description
         }).ToList();
     }
