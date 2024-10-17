@@ -1,24 +1,21 @@
-using Microsoft.AspNetCore.Mvc;
 using Application.Dto;
-using Application.interfaces;
+using Application.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ClientsController : ControllerBase
+public class ClientCardController(IClientCardService _clientService) : ControllerBase
 {
-    private readonly IClientService _clientService;
-
-    public ClientsController(IClientService clientService)
-    {
-        _clientService = clientService;
-    }
-
-     [HttpGet("{id}")]
+    [HttpGet("{id}")]
     public async Task<IActionResult> GetClientById(int id)
     {
         var client = await _clientService.FindClientById(id);
+
         if (client == null)
-            return Ok(new List<ClientDto>());
+        {
+            return Ok(new ClientCardDto());
+        }
+
         return Ok(client);
     }
 
@@ -26,27 +23,51 @@ public class ClientsController : ControllerBase
     public async Task<IActionResult> GetClientsByName(string name)
     {
         var clients = await _clientService.FindClientsByName(name);
+
         if (clients == null || !clients.Any())
-            return Ok(new List<ClientDto>());
+        {
+            return Ok(new List<ClientCardDto>());
+        }
+
         return Ok(clients);
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateClient(ClientDto clientDto)
+    public async Task<IActionResult> CreateClient(ClientCardDto clientDto)
     {
         var result = await _clientService.AddClient(clientDto);
+
         if (!result.IsSuccess)
+        {
             return BadRequest(result.Message);
+        }
+
         return Ok(result.Client);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> EditClient(int id, ClientDto clientData)
+    public async Task<IActionResult> EditClient(int id, ClientCardDto clientData)
     {
         var result = await _clientService.EditClient(id, clientData);
+
         if (!result.IsSuccess)
+        {
             return BadRequest(result.Message);
+        }
+
         return Ok(result.Client);
     }
-}
 
+    [HttpPut("{clientId}/{bookId}")]
+    public async Task<IActionResult> RenewBook(int clientId, int bookId)
+    {
+        var result = await _clientService.RenewBook(clientId, bookId);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result.Message);
+        }
+
+        return Ok(result.Record);
+    }
+}

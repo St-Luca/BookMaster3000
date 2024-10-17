@@ -10,6 +10,6 @@ namespace Domain.Entities
         public DateTime? ReturnDate { get; set; }
 
         public Book Book { get; set; }
-        public Client Client { get; set; }
+        public ClientCard Client { get; set; }
     }
 }
