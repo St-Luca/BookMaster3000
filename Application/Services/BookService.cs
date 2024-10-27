@@ -1,13 +1,16 @@
 ﻿using Application.Dto;
 using Application.Interfaces;
 using Domain.Entities;
+using Mapster;
 using Persistence.Interfaces;
 
 namespace Application.Services;
 
 public class BookService(IBookRepository _bookRepository) : IBookService
 {
-    public List<BookDto> FindBooks(string title, string author, string subject)
+    public byte PaginationLimit => 50;
+
+    public BookSearchResult FindBooks(string title, string author, string subject, int page)
     {
         var books = _bookRepository.GetBooks().ToList();
 
@@ -15,16 +18,7 @@ public class BookService(IBookRepository _bookRepository) : IBookService
             .Where(book => CheckMatch(title, author, subject, book))
             .ToList();
 
-        return filteredBooks.Select(book => new BookDto
-        {
-            Id = book.Id,
-            Title = book.Title,
-            Subtitle = book.Subtitle,
-            BookAuthors = book.BookAuthors.Select(ba => ba.Author.Name).ToList(),
-            BookSubjects = book.BookSubjects.Select(bs => bs.Subject.Name).ToList(),
-            PublicationDate = book.PublicationDate,
-            Description = book.Description
-        }).ToList();
+        return Paginate(filteredBooks, page);
     }
 
     private bool CheckMatch(string title, string author, string subject, Book book)
@@ -56,5 +50,17 @@ public class BookService(IBookRepository _bookRepository) : IBookService
         }
 
         return titleMatch && authorMatch && subjectMatch;
+    }
+
+    private BookSearchResult Paginate(List<Book> books, int page)
+    {
+        return new BookSearchResult
+        {
+            Books = books.Skip(page * PaginationLimit).Select(b => b.Adapt<BookDto>()).ToList(),
+            ItemsCount = books.Count,
+            PageLimit = PaginationLimit,
+            Page = page,
+            Pages = (books.Count + PaginationLimit - 1) / PaginationLimit,
+        };
     }
 }

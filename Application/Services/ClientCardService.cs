@@ -61,7 +61,8 @@ public class ClientCardService(IClientCardRepository _clientCardRepository) : IC
 
         if(issue != null && (issue.IssueTo - DateTime.Now).Days < 21)
         {
-            issue.IssueTo.AddDays(7);
+
+            issue.RenewReturnDateByWeek();
 
             await _clientCardRepository.EditClientCard(clientCard!);
         }

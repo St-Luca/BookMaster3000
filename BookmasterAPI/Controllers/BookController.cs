@@ -7,13 +7,22 @@ using Microsoft.AspNetCore.Mvc;
 public class BooksController(IBookService _bookService) : ControllerBase
 {
     [HttpGet("search")]
-    public ActionResult<List<BookDto>> SearchBooks(string title = null, string author = null, string subject = null)
+    public ActionResult<BookSearchResult> SearchBooks(string title = null, string author = null, string subject = null, int page = 1)
     {
-        var books = _bookService.FindBooks(title, author, subject);
+        var result =  _bookService.FindBooks(title, author, subject, page);
 
-        if (books == null || !books.Any())
-            return Ok(new List<BookDto>());
-        return Ok(books);
+        if (result.Books == null || result.Books.Count == 0)
+        {
+            return Ok(new BookSearchResult
+            {
+                Books = new List<BookDto>(),
+                ItemsCount = 0,
+                Page = page,
+                Pages = page,
+                PageLimit = _bookService.PaginationLimit
+            });
+        }
+
+        return Ok(result);
     }
-
 }

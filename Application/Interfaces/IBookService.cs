@@ -4,5 +4,7 @@ namespace Application.Interfaces;
 
 public interface IBookService
 {
-    List<BookDto> FindBooks(string title, string author, string subject);
+    public byte PaginationLimit { get; }
+
+    BookSearchResult FindBooks(string title, string author, string subject, int page);
 }

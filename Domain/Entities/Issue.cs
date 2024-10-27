@@ -11,5 +11,10 @@ namespace Domain.Entities
 
         public Book Book { get; set; }
         public ClientCard Client { get; set; }
+
+        public void RenewReturnDateByWeek()
+        {
+            IssueTo = IssueTo.AddDays(7);
+        }
     }
 }
