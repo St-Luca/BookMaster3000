@@ -21,6 +21,11 @@ public class BookService(IBookRepository _bookRepository) : IBookService
         return Paginate(filteredBooks, page);
     }
 
+    public async Task<BookDto?> GetBook(int bookId)
+    {
+        return (await _bookRepository.GetBook(bookId)).Adapt<BookDto>();
+    }
+
     private bool CheckMatch(string title, string author, string subject, Book book)
     {
 

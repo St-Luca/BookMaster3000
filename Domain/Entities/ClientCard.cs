@@ -11,5 +11,6 @@ namespace Domain.Entities
         public string Email { get; set; }
 
         public ICollection<Issue> Issues { get; set; }
+        public ICollection<Issue> Returns { get; set; }
     }
 }
