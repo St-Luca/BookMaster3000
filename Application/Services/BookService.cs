@@ -61,7 +61,7 @@ public class BookService(IBookRepository _bookRepository) : IBookService
     {
         return new BookSearchResult
         {
-            Books = books.Skip(page * PaginationLimit).Select(b => b.Adapt<BookDto>()).ToList(),
+            Books = books.Skip((page - 1) * PaginationLimit).Take(PaginationLimit).Select(b => b.Adapt<BookDto>()).ToList(),
             ItemsCount = books.Count,
             PageLimit = PaginationLimit,
             Page = page,

@@ -1,3 +1,4 @@
+using Application;
 using Application.Interfaces;
 using Application.Services;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,8 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+        MapsterConfig.RegisterMappings();
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
