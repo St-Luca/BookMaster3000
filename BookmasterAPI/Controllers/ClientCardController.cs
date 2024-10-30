@@ -70,4 +70,30 @@ public class ClientCardController(IClientCardService _clientService) : Controlle
 
         return Ok(result.Record);
     }
+
+    [HttpPost("{clientId}/{bookId}/issue")]
+    public async Task<IActionResult> IssueBook(int clientId, int bookId)
+    {
+        var result = await _clientService.IssueBook(clientId, bookId);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result.Message);
+        }
+
+        return Ok(result.Record);
+    }
+
+    [HttpPost("{clientId}/{bookId}/return")]
+    public async Task<IActionResult> ReturnBook(int clientId, int bookId)
+    {
+        var result = await _clientService.ReturnBook(clientId, bookId);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result.Message);
+        }
+
+        return Ok(result.Record);
+    }
 }
