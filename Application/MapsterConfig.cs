@@ -9,9 +9,11 @@ public static class MapsterConfig
 {
     public static void RegisterMappings()
     {
-        TypeAdapterConfig<ClientCardDto, ClientCard>.NewConfig()
+        TypeAdapterConfig<ClientCard, ClientCardDto>.NewConfig()
             .TwoWays()
-            .IgnoreNullValues(true);
+            .IgnoreNullValues(true)
+            .Map(dest => dest.Issues, src => src.Issues.Select(issue => issue.Adapt<CirculationRecord>()).ToList())
+            .Map(dest => dest.Returns, src => src.Returns.Select(returnItem => returnItem.Adapt<CirculationRecord>()).ToList());
 
         TypeAdapterConfig<Book, BookDto>
             .NewConfig()
