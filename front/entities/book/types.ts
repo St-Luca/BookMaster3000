@@ -15,4 +15,13 @@ export interface BookSearchParams {
   title?: string;
   author?: string;
   subject?: string;
+  page: Number;
+}
+
+export interface BookListResponse {
+  itemsCount: number
+  page: number;
+  pageLimit: number;
+  pages: number;
+  books: Array<Book>
 }

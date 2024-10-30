@@ -14,6 +14,7 @@ export interface Customer {
 export interface CustomerSearchParams {
   id?: string;
   name?: string;
+  page: number;
 }
 
 export interface CreatedCustomer {

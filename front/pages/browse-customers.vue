@@ -32,6 +32,9 @@ const rows = (customer:Customer) => ({
   name: customer.name,
 })
 
+const page = ref(1);
+const totalItems = ref(0);
+
 const handleSearchResult = (res: Customer[]) => {
   customersList.value = res;
   if (!customersList.value.find(b => b.id == viewedCustomer.value?.id)) {
@@ -43,13 +46,19 @@ const handleSearchResult = (res: Customer[]) => {
 <template>
   <BrowseLayout>
     <template #sidebar>
-      <CustomerSearchParams class="h-full" @result="handleSearchResult" />
+      <CustomerSearchParams
+        class="h-full"
+        :page="page"
+        @result="handleSearchResult"
+      />
     </template>
     <template #top>
       <BrowseList
         :list="customersList"
         :rows="rows"
         :cols="cols"
+        v-model:page="page"
+        :totalItems="totalItems"
         :highlightedItem="viewedCustomer"
         @select="handleBookSelect"
         class="h-full" 
