@@ -1,6 +1,6 @@
 {
     "stryker-config": {
-      "project": "D:/GIT/BookMaster3000/Application/Application.csproj",
+      "project": "C:/Users/Axlif/OneDrive/Документы/GitHub/BookMaster3000/Application/Application.csproj",
       "reporters": [ "html", "progress" ],
       "thresholds": {
         "high": 80,

@@ -31,10 +31,13 @@ public class ClientCardService(
 
     public async Task<(bool IsSuccess, string Message, ClientCardDto? Client)> AddClient(ClientCardDto clientData)
     {
-        var newClient = clientData.Adapt<ClientCard>();
-        await _clientCardRepository.AddClientCard(newClient);
+        if (clientData != null && clientData.Name != ""){
+            var newClient = clientData.Adapt<ClientCard>();
+            await _clientCardRepository.AddClientCard(newClient);
 
-        return (true, string.Empty, clientData);
+            return (true, string.Empty, clientData);
+        }
+        return (false, "Invalid client data", clientData);
     }
 
     public async Task<(bool IsSuccess, string Message, ClientCardDto? Client)> EditClient(int id, ClientCardDto clientData)
@@ -46,9 +49,11 @@ public class ClientCardService(
             clientData.Adapt(client);
 
             await _clientCardRepository.EditClientCard(client);
+
+            return (true, string.Empty, clientData);
         }
 
-        return (true, string.Empty, clientData);
+        return (false, "Client not found", clientData);
     }
 
     public async Task<(bool IsSuccess, string Message, CirculationRecord? Record)> RenewBook(int clientId, int bookId)
@@ -67,16 +72,18 @@ public class ClientCardService(
             issue.RenewReturnDateByWeek();
 
             await _clientCardRepository.EditClientCard(clientCard!);
+
+            return (true, string.Empty, issue.Adapt<CirculationRecord>());
         }
 
-        return (true, string.Empty, issue.Adapt<CirculationRecord>());
+        return (false, "Book has already been renewed", issue.Adapt<CirculationRecord>());
     }
 
     public async Task<(bool IsSuccess, string Message, CirculationRecord? Record)> ReturnBook(int clientId, int bookId)
     {
         var clientCard = await _clientCardRepository.GetClientCardById(clientId);
 
-        if(clientCard != null && clientCard.Issues.Count < 5)
+        if(clientCard != null  && clientCard.Issues != null && clientCard.Issues.Count < 5)
         {
             var issue = clientCard.Issues.FirstOrDefault(i => i.BookId == bookId);
 

@@ -23,6 +23,8 @@ public class LibraryContext : DbContext
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<BookAuthor>()
             .HasKey(ba => new { ba.BookId, ba.AuthorId });
 
@@ -48,6 +50,11 @@ public class LibraryContext : DbContext
             .HasOne(bs => bs.Subject)
             .WithMany(s => s.BookSubjects)
             .HasForeignKey(bs => bs.SubjectId);
+        modelBuilder.Entity<Issue>()
+        .HasOne(i => i.Client)
+        .WithMany(c => c.Issues)
+        .HasForeignKey(i => i.ClientId)
+        .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<Author>().HasKey(a => a.Id);
         modelBuilder.Entity<Book>().HasKey(b => b.Id);
         modelBuilder.Entity<ClientCard>().HasKey(c => c.Id);

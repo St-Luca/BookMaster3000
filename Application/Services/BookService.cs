@@ -34,7 +34,7 @@ public class BookService(IBookRepository _bookRepository) : IBookService
 
         bool authorMatch = true;
 
-        if (book.BookAuthors.Count != 0)
+        if (book.BookAuthors != null && book.BookAuthors.Count != 0)
         {
             authorMatch = string.IsNullOrEmpty(author) ||
                             (book.BookAuthors != null &&
@@ -45,7 +45,7 @@ public class BookService(IBookRepository _bookRepository) : IBookService
 
         bool subjectMatch = true;
 
-        if (book.BookSubjects.Count != 0)
+        if (book.BookSubjects != null && book.BookSubjects.Count != 0)
         {
             subjectMatch = string.IsNullOrEmpty(subject) ||
                                 (book.BookSubjects != null &&

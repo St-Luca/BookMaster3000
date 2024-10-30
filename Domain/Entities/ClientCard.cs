@@ -10,7 +10,7 @@ namespace Domain.Entities
         public string Phone { get; set; }
         public string Email { get; set; }
 
-        public ICollection<Issue> Issues { get; set; }
-        public ICollection<Issue> Returns { get; set; }
+        public ICollection<Issue> Issues { get; set; } = new List<Issue>();
+        public ICollection<Issue> Returns { get; set; } = new List<Issue>();
     }
 }
