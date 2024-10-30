@@ -21,25 +21,44 @@ namespace Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Entities.Author", b =>
+            modelBuilder.Entity("Domain.Entities.Administrator", b =>
                 {
-                    b.Property<int>("Key")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Key"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Login")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Administrators");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Author", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Bio")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("BirthDate")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("DeathDate")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<DateTime?>("DeathDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -49,9 +68,9 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Key");
+                    b.HasKey("Id");
 
-                    b.ToTable("Author");
+                    b.ToTable("Authors");
                 });
 
             modelBuilder.Entity("Domain.Entities.Book", b =>
@@ -66,12 +85,8 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("IsRented")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("PublicationDate")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<DateTime>("PublicationDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Subtitle")
                         .IsRequired()
@@ -88,35 +103,35 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.BookAuthor", b =>
                 {
-                    b.Property<int>("BookKey")
+                    b.Property<int>("BookId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("AuthorKey")
+                    b.Property<int>("AuthorId")
                         .HasColumnType("integer");
 
-                    b.HasKey("BookKey", "AuthorKey");
+                    b.HasKey("BookId", "AuthorId");
 
-                    b.HasIndex("AuthorKey");
+                    b.HasIndex("AuthorId");
 
-                    b.ToTable("BookAuthor");
+                    b.ToTable("BookAuthors");
                 });
 
             modelBuilder.Entity("Domain.Entities.BookSubject", b =>
                 {
-                    b.Property<int>("BookKey")
+                    b.Property<int>("BookId")
                         .HasColumnType("integer");
 
                     b.Property<int>("SubjectId")
                         .HasColumnType("integer");
 
-                    b.HasKey("BookKey", "SubjectId");
+                    b.HasKey("BookId", "SubjectId");
 
                     b.HasIndex("SubjectId");
 
-                    b.ToTable("BookSubject");
+                    b.ToTable("BookSubjects");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Client", b =>
+            modelBuilder.Entity("Domain.Entities.ClientCard", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -153,6 +168,28 @@ namespace Persistence.Migrations
                     b.ToTable("Clients");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Cover", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("BookId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.ToTable("Covers");
+                });
+
             modelBuilder.Entity("Domain.Entities.Issue", b =>
                 {
                     b.Property<int>("Id")
@@ -164,13 +201,13 @@ namespace Persistence.Migrations
                     b.Property<int>("BookId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("BookKey")
-                        .HasColumnType("integer");
-
                     b.Property<int>("ClientId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("IssueDate")
+                    b.Property<DateTime>("IssueFrom")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("IssueTo")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("ReturnDate")
@@ -228,20 +265,20 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Subject");
+                    b.ToTable("Subjects");
                 });
 
             modelBuilder.Entity("Domain.Entities.BookAuthor", b =>
                 {
                     b.HasOne("Domain.Entities.Author", "Author")
                         .WithMany("BookAuthors")
-                        .HasForeignKey("AuthorKey")
+                        .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Book", "Book")
                         .WithMany("BookAuthors")
-                        .HasForeignKey("BookKey")
+                        .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -254,7 +291,7 @@ namespace Persistence.Migrations
                 {
                     b.HasOne("Domain.Entities.Book", "Book")
                         .WithMany("BookSubjects")
-                        .HasForeignKey("BookKey")
+                        .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -269,6 +306,13 @@ namespace Persistence.Migrations
                     b.Navigation("Subject");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Cover", b =>
+                {
+                    b.HasOne("Domain.Entities.Book", null)
+                        .WithMany("Covers")
+                        .HasForeignKey("BookId");
+                });
+
             modelBuilder.Entity("Domain.Entities.Issue", b =>
                 {
                     b.HasOne("Domain.Entities.Book", "Book")
@@ -277,7 +321,7 @@ namespace Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Client", "Client")
+                    b.HasOne("Domain.Entities.ClientCard", "Client")
                         .WithMany("Issues")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -296,7 +340,7 @@ namespace Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Client", "Client")
+                    b.HasOne("Domain.Entities.ClientCard", "Client")
                         .WithMany()
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -317,9 +361,11 @@ namespace Persistence.Migrations
                     b.Navigation("BookAuthors");
 
                     b.Navigation("BookSubjects");
+
+                    b.Navigation("Covers");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Client", b =>
+            modelBuilder.Entity("Domain.Entities.ClientCard", b =>
                 {
                     b.Navigation("Issues");
                 });

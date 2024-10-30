@@ -1,25 +1,28 @@
-using Microsoft.AspNetCore.Mvc;
 using Application.Dto;
-using Application.interfaces;
+using Application.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
-public class BooksController : ControllerBase
+public class BooksController(IBookService _bookService) : ControllerBase
 {
-    private readonly IBookService _bookService;
-    
-    public BooksController(IBookService bookService)
-    {
-        _bookService = bookService;
-    }
-
     [HttpGet("search")]
-    public ActionResult<List<BookDto>> SearchBooks(string title = null, string author = null, string subject = null)
+    public ActionResult<BookSearchResult> SearchBooks(string title = null, string author = null, string subject = null, int page = 1)
     {
-        var books = _bookService.FindBooks(title, author, subject);
-        if (books == null || !books.Any())
-            return NotFound("No books found with the provided criteria.");
-        return Ok(books);
-    }
+        var result =  _bookService.FindBooks(title, author, subject, page);
 
+        if (result.Books == null || result.Books.Count == 0)
+        {
+            return Ok(new BookSearchResult
+            {
+                Books = new List<BookDto>(),
+                ItemsCount = 0,
+                Page = page,
+                Pages = page,
+                PageLimit = _bookService.PaginationLimit
+            });
+        }
+
+        return Ok(result);
+    }
 }

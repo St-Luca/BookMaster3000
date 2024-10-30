@@ -1,8 +1,8 @@
-using Persistence.interfaces;
-using Persistence.Repositories;
-using Application.interfaces;
+using Application.Interfaces;
 using Application.Services;
 using Microsoft.EntityFrameworkCore;
+using Persistence.Interfaces;
+using Persistence.Repositories;
 
 public class Program
 {
@@ -16,8 +16,8 @@ public class Program
         builder.Services.AddScoped<IBookService, BookService>();
         builder.Services.AddScoped<IBookRepository, BookRepository>();
 
-        builder.Services.AddScoped<IClientService, ClientService>();
-        builder.Services.AddScoped<IClientRepository, ClientRepository>();
+        builder.Services.AddScoped<IClientCardService, ClientCardService>();
+        builder.Services.AddScoped<IClientCardRepository, ClientCardRepository>();
 
         builder.Services.AddControllers()
             .AddJsonOptions(options =>
