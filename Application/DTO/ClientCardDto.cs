@@ -1,18 +1,14 @@
-using Application.DTO;
-
-namespace Application.Dto;
-
-public class ClientCardDto
+namespace Application.Dto
 {
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public string Zip { get; set; }
-    public string City { get; set; }
-    public string Phone { get; set; }
-    public string Email { get; set; }
-    public string Address { get; set; }
+    public class ClientCardDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Zip { get; set; }
+        public string City { get; set; }
+        public string Phone { get; set; }
+        public string Email { get; set; }
 
-    public ICollection<CirculationRecord> Issues { get; set; } = [];
-    public ICollection<CirculationRecord> Returns { get; set; } = [];
-
+        public string Address { get; set; }
+    }
 }
