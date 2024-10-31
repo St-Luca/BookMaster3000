@@ -1,7 +1,7 @@
 import type { CirculationRecord } from "~/entities/circulation-record";
 
 export interface Customer {
-  id: string;
+  id: string|number;
   name: string;
   phone: string;
   email: string;

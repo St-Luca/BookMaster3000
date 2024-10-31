@@ -7,7 +7,7 @@ type ApiResponse = {
   pageLimit: number;
   pages: number;
   books: Array<{
-    id: number,
+    id: string|number,
     title: string,
     description: string,
     subtitle: string,
