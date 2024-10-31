@@ -1,7 +1,7 @@
 import type { Author } from "~/entities/author";
 
 export interface Book {
-  id: number;
+  id: string|number;
   title: string;
   subtitle: string;
   description: string;

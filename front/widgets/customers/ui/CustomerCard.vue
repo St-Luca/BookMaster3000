@@ -22,7 +22,7 @@ const isOpenModal = ref(false);
 
 <template>
   <UCard
-    class="relative overflow-y-scroll pt-0"
+    class="relative pt-0"
   >
     <div v-if="customer" class="flex divide-x divide-gray-200">
       <div class="pr-6 w-[40%]">

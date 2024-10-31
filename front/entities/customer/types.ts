@@ -8,7 +8,8 @@ export interface Customer {
   city?: string;
   address?: string;
   zip?: string;
-  // circulation: CirculationRecord[];
+  hasBooks: CirculationRecord[];
+  circulationHistory: CirculationRecord[];
 }
 
 export interface CustomerSearchParams {
