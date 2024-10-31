@@ -1,29 +1,38 @@
 <script lang="ts" setup>
 import { searchBook } from '~/entities/book/api/search';
-import { type Book, type BookSearchParams } from '~/entities/book/types';
+import { type Book, type BookListResponse, type BookSearchParams } from '~/entities/book/types';
 import SearchParams from '~/features/browse/ui/SearchParams.vue';
 
-const emit = defineEmits<{
-  (event: 'result', value: Book[]): void
+const props = defineProps<{
+  page?: number;
 }>();
 
-const searchParams = ref<BookSearchParams>({
+const emit = defineEmits<{
+  (event: 'result', value: BookListResponse|false): void
+}>();
+
+const searchParams = ref<Partial<BookSearchParams>>({
   title: "",
   author: "",
   subject: "",
 });
 
-const fieldNames = ref<{[key in keyof BookSearchParams]: string}>({
+const fieldNames = ref<{[key in keyof BookSearchParams]?: string}>({
   title: "Название",
   author: "Автор",
   subject: "Тема",
 });
 
 const handleSubmit = () => {
-  searchBook(searchParams.value)
+  searchBook({
+    ...searchParams.value,
+    page: props.page ?? 1,
+  })
     .then(res => emit('result', res))
-    .catch(err => emit('result', []));
+    .catch(err => emit('result', false));
 };
+
+watch(() => props.page, handleSubmit);
 </script>
 
 <template>

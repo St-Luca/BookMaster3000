@@ -1,7 +1,7 @@
 import type { Author } from "~/entities/author";
 
 export interface Book {
-  id: number;
+  id: string|number;
   title: string;
   subtitle: string;
   description: string;
@@ -15,4 +15,13 @@ export interface BookSearchParams {
   title?: string;
   author?: string;
   subject?: string;
+  page: Number;
+}
+
+export interface BookListResponse {
+  itemsCount: number
+  page: number;
+  pageLimit: number;
+  pages: number;
+  books: Array<Book>
 }

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { Book } from '~/entities/book';
+import type { BookListResponse } from '~/entities/book/types';
 import { BrowseLayout, BrowseList } from '~/features/browse';
 import { BookCard, BookSearchParams } from '~/widgets/browse-books';
 
@@ -32,18 +33,30 @@ const rows = (book:Book) => ({
   author: book.authors.map(author => author.name).join(', '),
 })
 
-const handleSearchResult = (res: Book[]) => {
-  booksList.value = res;
-  if (!booksList.value.find(b => b.id == viewedBook.value?.id)) {
-    viewedBook.value = undefined;
+const page = ref(1);
+const totalItems = ref(0);
+
+const handleSearchResult = (res: BookListResponse|false) => {
+  if (!res) {
+    booksList.value = [];
+    return;
   }
+  booksList.value = res.books;
+  // if (!booksList.value.find(b => b.id == viewedBook.value?.id)) {
+  //   viewedBook.value = undefined;
+  // }
+  totalItems.value = res.itemsCount;
 }
 </script>
 
 <template>
   <BrowseLayout>
     <template #sidebar>
-      <BookSearchParams class="h-full" @result="handleSearchResult"></BookSearchParams>
+      <BookSearchParams
+        class="h-full"
+        :page="page"
+        @result="handleSearchResult"
+      />
     </template>
     <template #top>
       <BrowseList
@@ -51,11 +64,13 @@ const handleSearchResult = (res: Book[]) => {
         :rows="rows"
         :cols="cols"
         :highlightedItem="viewedBook"
-        @select="handleBookSelect"
+        v-model:page="page"
+        :totalItems="totalItems"
         class="h-full"
+        @select="handleBookSelect"
       />
     </template>
-    <template #bottom>
+    <template v-if="viewedBook" #bottom>
       <BookCard
         :book="viewedBook"
         :key="viewedBook?.id"

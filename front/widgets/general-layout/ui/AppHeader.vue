@@ -21,7 +21,11 @@ const items = ref([
         class: "bg-white hover:bg-gray-50"
       },
     ]]
-  }
+  },
+  {
+    label: "Циркуляция",
+    to: "/circulation"
+  },
 ]);
 
 const isOpenCustomerModal = ref(false);
