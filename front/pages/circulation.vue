@@ -5,7 +5,8 @@ import CirculationCard from '~/widgets/circulation/ui/CirculationCard.vue';
 import CirculationSearchParams from '~/widgets/circulation/ui/CirculationSearchParams.vue';
 
 definePageMeta({
-  layout: 'full-height'
+  layout: 'full-height',
+  middleware: 'auth',
 });
 
 const searchDone = ref(false);
@@ -33,7 +34,7 @@ const handleSearchResult = (res?:Customer) => {
         class="h-full"
       />
       <UCard
-        v-else="!searchDone"
+        v-else
         class="h-full text-slate-700"
         :ui="{ body: { base: 'h-full flex justify-center items-center' } }"
       >

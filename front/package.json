@@ -12,9 +12,13 @@
   "devDependencies": {
     "@nuxt/devtools": "latest",
     "@nuxt/ui": "^2.18.5",
+    "@pinia/nuxt": "^0.7.0",
     "nuxt": "^3.12.4"
   },
   "dependencies": {
     "yup": "^1.4.0"
+  },
+  "overrides": {
+    "vue": "latest"
   }
 }

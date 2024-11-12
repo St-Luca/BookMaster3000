@@ -4,7 +4,8 @@ import { BrowseLayout, BrowseList } from '~/features/browse';
 import { CustomerSearchParams, CustomerCard } from '~/widgets/customers';
 
 definePageMeta({
-  layout: 'full-height'
+  layout: 'full-height',
+  middleware: 'auth',
 })
 
 const customersList = ref<Customer[]|undefined>(undefined);

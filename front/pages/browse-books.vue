@@ -5,7 +5,8 @@ import { BrowseLayout, BrowseList } from '~/features/browse';
 import { BookCard, BookSearchParams } from '~/widgets/browse-books';
 
 definePageMeta({
-  layout: 'full-height'
+  layout: 'full-height',
+  middleware: 'auth',
 })
 
 const booksList = ref<Book[]|undefined>(undefined);

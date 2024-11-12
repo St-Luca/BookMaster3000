@@ -18,7 +18,7 @@ const searchParams = ref<Partial<CustomerSearchParams>>({
 });
 
 const fieldNames = ref<{[key in keyof CustomerSearchParams]?: string}>({
-  id: "ID",
+  id: "ID клиента",
 });
 
 const handleSubmit = () => {
