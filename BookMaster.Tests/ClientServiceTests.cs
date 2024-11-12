@@ -1,202 +1,330 @@
 using Xunit;
 using Moq;
 using Application.Services;
+using Application.Interfaces;
 using Domain.Entities;
-using Persistence.interfaces;
+using Persistence.Interfaces;
 using Application.Dto;
 using System.Collections.Generic;
 using System.Linq;
+
 namespace BookMaster.Tests
 {
-    public class ClientServiceTests
+    public class ClientCardServiceTests
     {
-        public ClientServiceTests(){}
+        private readonly Mock<IClientCardRepository> _mockClientRepository;
+        private readonly Mock<IBookService> _mockBookService;
+        private readonly ClientCardService _clientService;
 
-        [Fact]
-        public async void AddClient_ReturnsClientDto()
+        public ClientCardServiceTests()
         {
-            var mockClientRepository = new Mock<IClientRepository>();
-            var ClientService = new ClientService(mockClientRepository.Object);
-
-            var ClientDto = new ClientDto { Name = "John Doe", Email = "john@example.com", Phone = "1234567890" };
-            var Client = new Client { Name = "John Doe", Email = "john@example.com", Phone = "1234567890" };
-
-            mockClientRepository.Setup(repo => repo.AddClient(It.IsAny<Client>())).Callback<Client>(u => Client = u);
-
-            var result = await ClientService.AddClient(ClientDto);
-
-            Assert.Equal(ClientDto.Name, result.Client.Name);
-            Assert.Equal(ClientDto.Email, result.Client.Email);
-            Assert.Equal(ClientDto.Phone, result.Client.Phone);
-            mockClientRepository.Verify(repo => repo.AddClient(It.IsAny<Client>()), Times.Once);
-        }
-
-
-        [Fact]
-        public async void UpdateClient_UpdatesExistingClient()
-        {
-            var mockClientRepository = new Mock<IClientRepository>();
-            var ClientService = new ClientService(mockClientRepository.Object);
-
-            var existingClient = new Client { Id = 1, Name = "John Doe", Email = "john@example.com", Phone = "1234567890" };
-            var updatedClientDto = new ClientDto { Name = "John Smith", Email = "john.smith@example.com", Phone = "0987654321" };
-
-            mockClientRepository.Setup(repo => repo.GetClientById(It.IsAny<int>())).Returns(Task.FromResult(existingClient));
-
-            await ClientService.EditClient(1, updatedClientDto);
-
-            Assert.Equal(updatedClientDto.Name, existingClient.Name);
-            Assert.Equal(updatedClientDto.Email, existingClient.Email);
-            Assert.Equal(updatedClientDto.Phone, existingClient.Phone);
-            mockClientRepository.Verify(repo => repo.EditClient(It.IsAny<Client>()), Times.Once);
+            _mockClientRepository = new Mock<IClientCardRepository>();
+            _mockBookService = new Mock<IBookService>();
+            _clientService = new ClientCardService(_mockClientRepository.Object, _mockBookService.Object);
         }
 
         [Fact]
-        public async void GetClientById_ReturnsClientDto()
+        public async Task AddClient_ReturnsSuccess_WhenClientIsAdded()
         {
-            var mockClientRepository = new Mock<IClientRepository>();
-            var ClientService = new ClientService(mockClientRepository.Object);
+            // Arrange
+            var clientDto = new ClientCardDto { Name = "John Doe" };
+            _mockClientRepository.Setup(repo => repo.AddClientCard(It.IsAny<ClientCard>())).Returns(Task.CompletedTask);
 
-            var Client = new Client { Id = 1, Name = "John Doe", Email = "john@example.com", Phone = "1234567890" };
+            // Act
+            var result = await _clientService.AddClient(clientDto);
 
-            mockClientRepository.Setup(repo => repo.GetClientById(It.IsAny<int>())).Returns(Task.FromResult((Client)null));
-
-            var result = await ClientService.FindClientById(1);
-
-            Assert.Equal(Client.Name, result.Name);
-            Assert.Equal(Client.Email, result.Email);
-            Assert.Equal(Client.Phone, result.Phone);
+            // Assert
+            Assert.True(result.IsSuccess);
+            Assert.Equal("", result.Message);
+            Assert.Equal(clientDto.Name, result.Client.Name);
         }
 
         [Fact]
-        public async void AddClient_WithEmptyName_ThrowsArgumentException()
+        public async Task AddClient_ReturnsFailure_WhenClientDataIsInvalid()
         {
-            var mockClientRepository = new Mock<IClientRepository>();
-            var ClientService = new ClientService(mockClientRepository.Object);
+            // Arrange
+            var clientDto = new ClientCardDto { Name = "" }; // Invalid name
+            _mockClientRepository.Setup(repo => repo.AddClientCard(It.IsAny<ClientCard>())).Returns(Task.CompletedTask);
 
-            var ClientDto = new ClientDto { Name = "", Email = "john@example.com", Phone = "1234567890" };
+            // Act
+            var result = await _clientService.AddClient(clientDto);
 
-            var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await ClientService.AddClient(ClientDto));
-            Assert.Equal("Name cannot be empty", exception.Message);
-            mockClientRepository.Verify(repo => repo.AddClient(It.IsAny<Client>()), Times.Never);
+            // Assert
+            Assert.False(result.IsSuccess);
+            Assert.Equal("Invalid client data", result.Message);
         }
 
         [Fact]
-        public async void UpdateClient_ClientNotFound_ThrowsException()
+        public async Task FindClientById_ReturnsClient_WhenClientExists()
         {
+            // Arrange
+            var client = new ClientCard { Id = 1, Name = "John Doe" };
+            _mockClientRepository.Setup(repo => repo.GetClientCardById(1)).ReturnsAsync(client);
 
-            var mockClientRepository = new Mock<IClientRepository>();
-            var ClientService = new ClientService(mockClientRepository.Object);
-            var existingClient = new Client { Id = 1, Name = "John Doe", Email = "john@example.com", Phone = "1234567890" };
-            var updatedClientDto = new ClientDto { Name = "John Smith", Email = "john.smith@example.com", Phone = "0987654321" };
+            // Act
+            var result = await _clientService.FindClientById(1);
 
-            mockClientRepository.Setup(repo => repo.GetClientById(It.IsAny<int>())).Returns(Task.FromResult(existingClient));
-
-            var exception = await Assert.ThrowsAsync<Exception>(() => ClientService.EditClient(1, updatedClientDto));
-            Assert.Equal("Client not found", exception.Message);
-            mockClientRepository.Verify(repo => repo.EditClient(It.IsAny<Client>()), Times.Never);
-        }
-
-        [Fact]
-        public async void GetClientById_ClientExists_ReturnsClientDto()
-        {
-            var mockClientRepository = new Mock<IClientRepository>();
-            var ClientService = new ClientService(mockClientRepository.Object);
-
-            var Client = new Client { Id = 1, Name = "John Doe", Email = "john@example.com", Phone = "1234567890" };
-
-            mockClientRepository.Setup(repo => repo.GetClientById(1)).Returns(Task.FromResult(Client));
-
-            var result = await ClientService.FindClientById(1);
-
+            // Assert
             Assert.NotNull(result);
-            Assert.Equal(Client.Name, result.Name);
-            Assert.Equal(Client.Email, result.Email);
-            Assert.Equal(Client.Phone, result.Phone);
-            mockClientRepository.Verify(repo => repo.GetClientById(1), Times.Once);
+            Assert.Equal(client.Name, result.Name);
         }
 
         [Fact]
-        public async void GetClientById_ClientNotFound_ThrowsException()
+        public async Task FindClientById_ReturnsNull_WhenClientDoesNotExist()
         {
-            var mockClientRepository = new Mock<IClientRepository>();
-            var ClientService = new ClientService(mockClientRepository.Object);
-            var existingClient = new Client { Id = 1, Name = "John Doe", Email = "john@example.com", Phone = "1234567890" };
-            mockClientRepository.Setup(repo => repo.GetClientById(It.IsAny<int>())).Returns(Task.FromResult(existingClient));
+            // Arrange
+            _mockClientRepository.Setup(repo => repo.GetClientCardById(1)).ReturnsAsync((ClientCard)null);
 
-            var exception = await Assert.ThrowsAsync<Exception>(() => ClientService.FindClientById(1));
-            Assert.Equal("Client not found", exception.Message);
-            mockClientRepository.Verify(repo => repo.GetClientById(1), Times.Once);
+            // Act
+            var result = await _clientService.FindClientById(1);
+
+            // Assert
+            Assert.Null(result);
         }
 
         [Fact]
-        public async void UpdateClient_ValidClient_UpdatesCorrectly()
+        public async Task EditClient_UpdatesClient_WhenClientExists()
         {
-            var mockClientRepository = new Mock<IClientRepository>();
-            var ClientService = new ClientService(mockClientRepository.Object);
+            // Arrange
+            var client = new ClientCard { Id = 1, Name = "John Doe" };
+            var clientDto = new ClientCardDto { Name = "Jane Doe" };
 
-            var existingClient = new Client { Id = 1, Name = "John Doe", Email = "john@example.com", Phone = "1234567890" };
-            var updatedClientDto = new ClientDto { Name = "John Smith", Email = "john.smith@example.com", Phone = "0987654321" };
+            _mockClientRepository.Setup(repo => repo.GetClientCardById(1)).ReturnsAsync(client);
+            _mockClientRepository.Setup(repo => repo.EditClientCard(It.IsAny<ClientCard>())).Returns(Task.CompletedTask);
 
-            mockClientRepository.Setup(repo => repo.GetClientById(It.IsAny<int>())).Returns(Task.FromResult(existingClient));
+            // Act
+            var result = await _clientService.EditClient(1, clientDto);
 
-            await ClientService.EditClient(1, updatedClientDto);
-
-            Assert.Equal(updatedClientDto.Name, existingClient.Name);
-            Assert.Equal(updatedClientDto.Email, existingClient.Email);
-            Assert.Equal(updatedClientDto.Phone, existingClient.Phone);
-            mockClientRepository.Verify(repo => repo.EditClient(It.IsAny<Client>()), Times.Once);
+            // Assert
+            Assert.True(result.IsSuccess);
+            Assert.Equal("", result.Message);
+            Assert.Equal("Jane Doe", client.Name);
         }
 
         [Fact]
-        public async void AddClient_WithUniqueEmail_Successful()
+        public async Task EditClient_ReturnsFailure_WhenClientDoesNotExist()
         {
-            var mockClientRepository = new Mock<IClientRepository>();
-            var ClientService = new ClientService(mockClientRepository.Object);
+            // Arrange
+            var clientDto = new ClientCardDto { Name = "Jane Doe" };
+            _mockClientRepository.Setup(repo => repo.GetClientCardById(1)).ReturnsAsync((ClientCard)null);
 
-            var ClientDto = new ClientDto { Name = "Jane Doe", Email = "jane@example.com", Phone = "1234567890" };
-            mockClientRepository.Setup(repo => repo.FindClientByPhoneOrEmail("", It.IsAny<string>())).Returns(Task.FromResult((Client)null));
+            // Act
+            var result = await _clientService.EditClient(1, clientDto);
 
-            var result = await ClientService.AddClient(ClientDto);
+            // Assert
 
-            Assert.NotNull(result);
-            Assert.Equal(ClientDto.Email, result.Client.Email);
-            mockClientRepository.Verify(repo => repo.AddClient(It.IsAny<Client>()), Times.Once);
+            Assert.False(result.IsSuccess);
+            Assert.Equal("Client not found", result.Message);
         }
 
         [Fact]
-        public async void AddClient_WithDuplicateEmail_ThrowsException()
+        public async Task IssueBook_ReturnsSuccess_WhenBookIsIssued()
         {
-            var mockClientRepository = new Mock<IClientRepository>();
-            var ClientService = new ClientService(mockClientRepository.Object);
+            // Arrange
+            var client = new ClientCard { Id = 1, Issues = new List<Issue>() };
+            var book = new Book { Id = 1, Title = "Test Book" };
 
-            var existingClient = new Client { Id = 1, Name = "John Doe", Email = "john@example.com", Phone = "1234567890" };
-            var ClientDto = new ClientDto { Name = "Jane Doe", Email = "john@example.com", Phone = "0987654321" };
+            _mockClientRepository.Setup(repo => repo.GetClientCardById(1)).ReturnsAsync(client);
+            _mockBookService.Setup(service => service.GetBook(1)).ReturnsAsync(new BookDto { Id = 1, Title = "Test Book" });
 
-            mockClientRepository.Setup(repo => repo.FindClientByPhoneOrEmail("", It.IsAny<string>())).Returns(Task.FromResult(existingClient));
+            // Act
+            var result = await _clientService.IssueBook(1, 1);
 
-            var exception = await Assert.ThrowsAsync<Exception>(() => ClientService.AddClient(ClientDto));
-            Assert.Equal("Email already exists", exception.Message);
-            mockClientRepository.Verify(repo => repo.AddClient(It.IsAny<Client>()), Times.Never);
+            // Assert
+            Assert.True(result.IsSuccess);
+            Assert.Equal("", result.Message);
+            Assert.Contains(client.Issues, i => i.BookId == 1);
         }
 
         [Fact]
-        public async void UpdateClient_ChangesEmail_Successful()
+        public async Task IssueBook_ReturnsFailure_WhenClientHasReachedMaxIssues()
         {
-            var mockClientRepository = new Mock<IClientRepository>();
-            var ClientService = new ClientService(mockClientRepository.Object);
+            // Arrange
+            var client = new ClientCard { Id = 1, Issues = Enumerable.Range(1, 5).Select(i => new Issue { BookId = i }).ToList() };
 
-            var existingClient = new Client { Id = 1, Name = "John Doe", Email = "john@example.com", Phone = "1234567890" };
-            var updatedClientDto = new ClientDto { Name = "John Doe", Email = "john.new@example.com", Phone = "1234567890" };
+            _mockClientRepository.Setup(repo => repo.GetClientCardById(1)).ReturnsAsync(client);
 
-            mockClientRepository.Setup(repo => repo.GetClientById(1)).Returns(Task.FromResult(existingClient));
-            mockClientRepository.Setup(repo => repo.FindClientByPhoneOrEmail("","john.new@example.com")).Returns(Task.FromResult(existingClient));
+            // Act
+            var result = await _clientService.IssueBook(1, 3);
 
-            await ClientService.EditClient(1, updatedClientDto);
-
-            Assert.Equal(updatedClientDto.Email, existingClient.Email);
-            mockClientRepository.Verify(repo => repo.EditClient(It.IsAny<Client>()), Times.Once);
+            // Assert
+            Assert.False(result.IsSuccess);
+            Assert.Equal("Client card or book not found, or issues are filled", result.Message);
         }
 
+        [Fact]
+        public async Task IssueBook_ReturnsFailure_WhenClientCanReachMaxIssues()
+        {
+            // Arrange
+            var client = new ClientCard { Id = 1, Issues = Enumerable.Range(1, 4).Select(i => new Issue { BookId = i }).ToList() };
+
+            _mockClientRepository.Setup(repo => repo.GetClientCardById(1)).ReturnsAsync(client);
+
+            // Act
+            var result = await _clientService.IssueBook(1, 3);
+
+            // Assert
+            Assert.False(result.IsSuccess);
+            Assert.Equal("Client card or book not found, or issues are filled", result.Message);
+        }
+
+        [Fact]
+        public async Task RenewBook_ReturnsSuccess_WhenBookIsRenewed()
+        {
+            // Arrange
+            var issue = new Issue { BookId = 1, IssueTo = DateTime.Now.AddDays(10), IsRenewed = false };
+            var client = new ClientCard { Id = 1, Issues = new List<Issue> { issue } };
+
+            _mockClientRepository.Setup(repo => repo.GetClientCardById(1)).ReturnsAsync(client);
+
+            // Act
+            var result = await _clientService.RenewBook(1, 1);
+
+            // Assert
+            Assert.True(result.IsSuccess);
+            Assert.True(issue.IsRenewed);
+            Assert.Equal("", result.Message);
+        }
+
+        [Fact]
+        public async Task RenewBook_ReturnsFailure_WhenBookAlreadyRenewed()
+        {
+            // Arrange
+            var issue = new Issue { BookId = 1, IsRenewed = true };
+            var client = new ClientCard { Id = 1, Issues = new List<Issue> { issue } };
+
+            _mockClientRepository.Setup(repo => repo.GetClientCardById(1)).ReturnsAsync(client);
+
+            // Act
+            var result = await _clientService.RenewBook(1, 1);
+
+            // Assert
+            Assert.False(result.IsSuccess);
+            Assert.Equal("Book has already been renewed", result.Message);
+        }
+
+        [Fact]
+        public async Task ReturnBook_ReturnsSuccess_WhenBookIsReturnedOnTime()
+        {
+            // Arrange
+            var issue = new Issue { BookId = 1, IssueTo = DateTime.Now.AddDays(1) };
+            var client = new ClientCard { Id = 1, Issues = new List<Issue> { issue }, Returns = new List<Issue>() };
+
+            _mockClientRepository.Setup(repo => repo.GetClientCardById(1)).ReturnsAsync(client);
+
+            // Act
+            var result = await _clientService.ReturnBook(1, 1);
+
+            // Assert
+            Assert.True(result.IsSuccess);
+            Assert.Equal(string.Empty, result.Message);
+            Assert.Single(client.Returns, i => i.BookId == 1);
+        }
+
+        [Fact]
+        public async Task ReturnBook_ReturnsLateReturnMessage_WhenBookIsReturnedLate()
+        {
+            // Arrange
+            var issue = new Issue { BookId = 1, IssueTo = DateTime.Now.AddDays(-1) }; // Late return
+            var client = new ClientCard { Id = 1, Issues = new List<Issue> { issue }, Returns = new List<Issue>() };
+
+            _mockClientRepository.Setup(repo => repo.GetClientCardById(1)).ReturnsAsync(client);
+
+            // Act
+            var result = await _clientService.ReturnBook(1, 1);
+
+            // Assert
+            Assert.True(result.IsSuccess);
+            Assert.Equal("Too late return", result.Message);
+            Assert.Single(client.Returns, i => i.BookId == 1);
+        }
+
+        [Fact]
+        public async Task ReturnBook_ReturnsFailure_WhenClientOrIssueNotFound()
+        {
+            // Arrange: Client does not exist
+            _mockClientRepository.Setup(repo => repo.GetClientCardById(1)).ReturnsAsync((ClientCard)null);
+
+            // Act
+            var result = await _clientService.ReturnBook(1, 1);
+
+            // Assert
+            Assert.False(result.IsSuccess);
+            Assert.Equal("Client card or issue not found", result.Message);
+        }
+
+        [Fact]
+        public async Task ReturnBook_ReturnsFailure_WhenIssueNotFoundForClient()
+        {
+            // Arrange: Client exists but has no issues for the book
+            var client = new ClientCard { Id = 1, Issues = new List<Issue>(), Returns = new List<Issue>() };
+            _mockClientRepository.Setup(repo => repo.GetClientCardById(1)).ReturnsAsync(client);
+
+            // Act
+            var result = await _clientService.ReturnBook(1, 1);
+
+            // Assert
+            Assert.False(result.IsSuccess);
+            Assert.Equal("Client card or issue not found", result.Message);
+        }
+
+        [Fact]
+        public async Task FindClientsByName_ReturnsClients_WhenClientsExistWithName()
+        {
+            // Arrange
+            var clients = new List<ClientCard>
+            {
+                new ClientCard { Id = 1, Name = "John Doe" },
+                new ClientCard { Id = 2, Name = "Jane Doe" }
+            };
+
+            _mockClientRepository.Setup(repo => repo.GetAllClientCards()).ReturnsAsync(clients);
+
+            // Act
+            var result = await _clientService.FindClientsByName("Doe");
+
+            // Assert
+            Assert.NotEmpty(result);
+            Assert.Equal(2, result.Count);
+        }
+
+        [Fact]
+        public async Task FindClientsByName_ReturnsPartialMatches_WhenClientsExistWithPartialName()
+        {
+            // Arrange
+            var clients = new List<ClientCard>
+            {
+                new ClientCard { Id = 1, Name = "John Doe" },
+                new ClientCard { Id = 2, Name = "Jane Smith" }
+            };
+
+            _mockClientRepository.Setup(repo => repo.GetAllClientCards()).ReturnsAsync(clients);
+
+            // Act
+            var result = await _clientService.FindClientsByName("Jo");
+
+            // Assert
+            Assert.Single(result);
+            Assert.Equal("John Doe", result[0].Name);
+        }
+
+        [Fact]
+        public async Task FindClientsByName_ReturnsEmpty_WhenNoClientsMatchName()
+        {
+            // Arrange
+            var clients = new List<ClientCard>
+            {
+                new ClientCard { Id = 1, Name = "John Doe" },
+                new ClientCard { Id = 2, Name = "Jane Smith" }
+            };
+
+            _mockClientRepository.Setup(repo => repo.GetAllClientCards()).ReturnsAsync(clients);
+
+            // Act
+            var result = await _clientService.FindClientsByName("Nonexistent");
+
+            // Assert
+            Assert.Empty(result);
+        }
     }
 }

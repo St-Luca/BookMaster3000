@@ -1,23 +1,18 @@
 using Domain.Entities;
-using Persistence.interfaces;
 using Microsoft.EntityFrameworkCore;
+using Persistence.Interfaces;
 
-namespace Persistence.Repositories
+namespace Persistence.Repositories;
+
+public class BookRepository(LibraryContext _context) : IBookRepository
 {
-    public class BookRepository : IBookRepository
+    public async Task<Book?> GetBook(int bookId)
     {
-        private readonly LibraryContext _context;
+        return await _context.Books.Include(b => b.BookAuthors).ThenInclude(ba => ba.Author).Include(b => b.BookSubjects).ThenInclude(bs => bs.Subject).FirstOrDefaultAsync(b => b.Id == bookId);
+    }
 
-        public BookRepository(LibraryContext context)
-        {
-            _context = context;
-        }
-
-        public List<Book> GetBooks()
-        {
-            return _context.Books.Include(b => b.BookAuthors).ThenInclude(ba => ba.Author).Include(b => b.BookSubjects).ThenInclude(bs => bs.Subject).ToList();
-        }
+    public List<Book> GetBooks()
+    {
+        return _context.Books.Include(b => b.BookAuthors).ThenInclude(ba => ba.Author).Include(b => b.BookSubjects).ThenInclude(bs => bs.Subject).ToList();
     }
 }
-
-
