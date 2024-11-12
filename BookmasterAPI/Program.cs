@@ -7,6 +7,8 @@ using Persistence.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Application.interfaces;
+using Persistence.interfaces;
 
 public class Program
 {
@@ -26,6 +28,9 @@ public class Program
 
         builder.Services.AddScoped<IClientCardService, ClientCardService>();
         builder.Services.AddScoped<IClientCardRepository, ClientCardRepository>();
+
+        builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
 
         builder.Services.AddControllers()
             .AddJsonOptions(options =>

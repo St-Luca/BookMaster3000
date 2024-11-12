@@ -24,11 +24,11 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest login)
     {
-        var user = await _userService.Authenticate(login.Username, login.Password);
-        if (user == null)
-            return Unauthorized("Invalid credentials");
+        var result = await _userService.Authenticate(login.Username, login.Password);
+        if (result.User == null)
+            return BadRequest(result.Message);
 
-        var token = GenerateJwtToken(user);
+        var token = GenerateJwtToken(result.User);
         return Ok(new { Token = token });
     }
 
@@ -36,6 +36,7 @@ public class AuthController : ControllerBase
     {
         var jwtSettings = _configuration.GetSection("JwtSettings");
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]));
+
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new[]

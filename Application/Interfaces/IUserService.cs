@@ -3,7 +3,7 @@ namespace Application.interfaces
 {
     public interface IUserService
     {
-        Task<User> Authenticate(string username, string password);
+        Task<(bool IsSuccess, string Message, User? User)> Authenticate(string username, string password);
 
     }
 }

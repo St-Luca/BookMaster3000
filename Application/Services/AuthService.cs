@@ -13,13 +13,14 @@ namespace Application.Services
             _userRepository = userRepository;
         }
 
-        public async Task<User> Authenticate(string username, string password)
+        public async Task<(bool IsSuccess, string Message, User? User)> Authenticate(string username, string password)
         {
             var user = await _userRepository.GetUserByUsername(username);
+            
             if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))
-                return null;
+                return (false, $"{BCrypt.Net.BCrypt.HashPassword(password)}", null);
 
-            return user;
+            return (true, "Authentification is complete", user);
         }
 
     }
