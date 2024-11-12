@@ -4,6 +4,11 @@ using Application.Services;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Interfaces;
 using Persistence.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Application.interfaces;
+using Persistence.interfaces;
 
 public class Program
 {
@@ -12,6 +17,8 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         MapsterConfig.RegisterMappings();
+        
+        var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
@@ -21,6 +28,9 @@ public class Program
 
         builder.Services.AddScoped<IClientCardService, ClientCardService>();
         builder.Services.AddScoped<IClientCardRepository, ClientCardRepository>();
+
+        builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
 
         builder.Services.AddControllers()
             .AddJsonOptions(options =>
@@ -42,6 +52,26 @@ public class Program
         });
 
         builder.Services.AddAuthorization();
+
+        builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = jwtSettings["Issuer"],
+                ValidAudience = jwtSettings["Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]))
+            };
+        });
+
         builder.Services.AddControllers();
         builder.Services.AddDbContext<LibraryContext>(options =>
             options.UseNpgsql(builder.Configuration.GetConnectionString("Host=postgres.db;Database=bookmaster_DB;Username=postgres;Password=1234")));

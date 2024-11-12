@@ -12,6 +12,7 @@ public class LibraryContext : DbContext
     public DbSet<Cover> Covers { get; set; }
     public DbSet<BookAuthor> BookAuthors { get; set; }
     public DbSet<BookSubject> BookSubjects { get; set; }
+    public DbSet<User> Users { get; set; }
 
     public LibraryContext() {}
 
@@ -61,6 +62,7 @@ public class LibraryContext : DbContext
         modelBuilder.Entity<Issue>().HasKey(i => i.Id);
         modelBuilder.Entity<Loan>().HasKey(l => l.Id);
         modelBuilder.Entity<Subject>().HasKey(s => s.Id);
+        modelBuilder.Entity<User>().HasKey(s => s.Id);
     }
     
 }
