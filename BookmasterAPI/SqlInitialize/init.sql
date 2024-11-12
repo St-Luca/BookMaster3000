@@ -70,6 +70,24 @@ CREATE TABLE "Issues" (
     FOREIGN KEY ("BookId") REFERENCES "Books"("Id")
 );
 
+CREATE TABLE IF NOT EXISTS "Users" (
+    "Id" SERIAL PRIMARY KEY,
+    "Username" VARCHAR(50) UNIQUE NOT NULL,
+    "Password" VARCHAR(255) NOT NULL
+);
+
+INSERT INTO "Users" ("Username", "Password") VALUES
+('user1', 'password123'),
+('user2', 'password123'),
+('user3', 'password123'),
+('user4', 'password123'),
+('user5', 'password123'),
+('user6', 'password123'),
+('user7', 'password123'),
+('user8', 'password123'),
+('user9', 'password123'),
+('user10', 'password123');
+
 INSERT INTO "Covers" ("Description") 
 VALUES ('Пример обложки'); 
 
