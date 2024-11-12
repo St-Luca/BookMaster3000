@@ -70,6 +70,24 @@ CREATE TABLE "Issues" (
     FOREIGN KEY ("BookId") REFERENCES "Books"("Id")
 );
 
+CREATE TABLE IF NOT EXISTS "Users" (
+    "Id" SERIAL PRIMARY KEY,
+    "Username" VARCHAR(50) UNIQUE NOT NULL,
+    "Password" VARCHAR(255) NOT NULL
+);
+
+INSERT INTO "Users" ("Username", "Password") VALUES
+('user1', '$2a$11$cQxgooxZqEEhTH3E0mpTt.ylaV07f3oSFGlXmJzpL5d35TQhgp1AG'),
+('user2', '$2a$11$cQxgooxZqEEhTH3E0mpTt.ylaV07f3oSFGlXmJzpL5d35TQhgp1AG'),
+('user3', '$2a$11$cQxgooxZqEEhTH3E0mpTt.ylaV07f3oSFGlXmJzpL5d35TQhgp1AG'),
+('user4', '$2a$11$cQxgooxZqEEhTH3E0mpTt.ylaV07f3oSFGlXmJzpL5d35TQhgp1AG'),
+('user5', '$2a$11$cQxgooxZqEEhTH3E0mpTt.ylaV07f3oSFGlXmJzpL5d35TQhgp1AG'),
+('user6', '$2a$11$cQxgooxZqEEhTH3E0mpTt.ylaV07f3oSFGlXmJzpL5d35TQhgp1AG'),
+('user7', '$2a$11$cQxgooxZqEEhTH3E0mpTt.ylaV07f3oSFGlXmJzpL5d35TQhgp1AG'),
+('user8', '$2a$11$cQxgooxZqEEhTH3E0mpTt.ylaV07f3oSFGlXmJzpL5d35TQhgp1AG'),
+('user9', '$2a$11$cQxgooxZqEEhTH3E0mpTt.ylaV07f3oSFGlXmJzpL5d35TQhgp1AG'),
+('user10', '$2a$11$cQxgooxZqEEhTH3E0mpTt.ylaV07f3oSFGlXmJzpL5d35TQhgp1AG');
+
 INSERT INTO "Covers" ("Description") 
 VALUES ('Пример обложки'); 
 
