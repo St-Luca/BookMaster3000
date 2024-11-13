@@ -1,4 +1,4 @@
-namespace Application.Dto
+namespace Application.DTO
 {
     public class ClientCardDto
     {
@@ -10,5 +10,8 @@ namespace Application.Dto
         public string Email { get; set; }
 
         public string Address { get; set; }
+
+        public List<CirculationRecord> IssuedBooks { get; set; }
+        public List<CirculationRecord> ReturnedBooks { get; set; }
     }
 }

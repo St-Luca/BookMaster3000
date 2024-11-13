@@ -1,4 +1,4 @@
-using Application.Dto;
+using Application.DTO;
 
 namespace Application.Interfaces;
 

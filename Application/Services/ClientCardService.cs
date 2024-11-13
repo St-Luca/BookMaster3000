@@ -1,4 +1,3 @@
-using Application.Dto;
 using Application.DTO;
 using Application.Interfaces;
 using Domain.Entities;
@@ -9,6 +8,7 @@ namespace Application.Services;
 
 public class ClientCardService(
     IClientCardRepository _clientCardRepository,
+    IBookRepository _bookRepository,
     IBookService _bookService) : IClientCardService
 {
     public async Task<ClientCardDto?> FindClientById(int id)
@@ -91,12 +91,12 @@ public class ClientCardService(
             {
                 var message = string.Empty;
 
-                if((issue.IssueTo - DateTime.Now).Days < 0)
+                if((issue.IssueTo - DateTime.Now.ToUniversalTime()).Days < 0)
                 {
                     message = "Too late return";
                 }
 
-                issue.ReturnDate = DateTime.Now;
+                issue.ReturnDate = DateTime.Now.ToUniversalTime();
 
                 clientCard.Issues.Remove(issue);
                 clientCard.Returns.Add(issue);
@@ -116,19 +116,19 @@ public class ClientCardService(
 
         if (clientCard != null && clientCard.Issues.Count < 5)
         {
-            var book = await _bookService.GetBook(bookId);
+            var book = await _bookRepository.GetBook(bookId);
 
             if(book != null)
             {
                 var issue = new Issue
                 {
                     BookId = bookId,
-                    ClientId = clientId,
-                    IssueFrom = DateTime.Now,
-                    IssueTo = DateTime.Now.AddDays(21),
+                    ClientCardId = clientId,
+                    IssueFrom = DateTime.Now.ToUniversalTime(),
+                    IssueTo = DateTime.Now.AddDays(21).ToUniversalTime(),
                     ReturnDate = null,
-                    Book = book.Adapt<Book>(),
-                    Client = clientCard,
+                    Book = book,
+                    ClientCard = clientCard,
                 };
 
                 clientCard.Issues.Add(issue);

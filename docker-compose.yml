@@ -35,6 +35,8 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
     depends_on:
       - postgres.db
+    volumes:
+      - ./BookmasterAPI/SqlInitialize/servers.json:/pgadmin4/servers.json
     ports:
       - "8080:8080"
       - "443:443"

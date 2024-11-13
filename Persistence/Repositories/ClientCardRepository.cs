@@ -8,7 +8,12 @@ public class ClientCardRepository(LibraryContext _context) : IClientCardReposito
 {
     public async Task<ClientCard?> GetClientCardById(int id)
     {
-        return await _context.Clients.FindAsync(id);
+        return await _context.Clients
+        .Include(c => c.Issues)
+            .ThenInclude(i => i.Book)
+        .Include(c => c.Returns)
+            .ThenInclude(r => r.Book)
+        .FirstOrDefaultAsync(c => c.Id == id);
     }
 
     public async Task<List<ClientCard>> GetAllClientCards()
