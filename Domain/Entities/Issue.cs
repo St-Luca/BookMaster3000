@@ -5,14 +5,22 @@ namespace Domain.Entities;
 public class Issue
 {
     public int Id { get; set; } 
+
     public int BookId { get; set; }
-    public int ClientId { get; set; }
-    public DateTime IssueFrom { get; set; }
-    public DateTime IssueTo { get; set; }
-    public DateTime? ReturnDate { get; set; }
 
     public Book Book { get; set; }
-    public ClientCard Client { get; set; }
+
+    [ForeignKey("ClientCardId")]
+    public int ClientCardId { get; set; }
+
+    public ClientCard ClientCard { get; set; }
+
+    public DateTime IssueFrom { get; set; }
+
+    public DateTime IssueTo { get; set; }
+
+    public DateTime? ReturnDate { get; set; }
+
 
     [NotMapped]
     public bool IsRenewed {  get; set; }

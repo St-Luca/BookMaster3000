@@ -1,5 +1,4 @@
-﻿using Application.Dto;
-using Application.DTO;
+﻿using Application.DTO;
 using Domain.Entities;
 using Mapster;
 
@@ -9,14 +8,22 @@ public static class MapsterConfig
 {
     public static void RegisterMappings()
     {
-        TypeAdapterConfig<ClientCardDto, ClientCard>.NewConfig()
-            .TwoWays()
-            .IgnoreNullValues(true);
+        TypeAdapterConfig<ClientCard, ClientCardDto>
+            .NewConfig()
+            .Map(dest => dest.IssuedBooks, 
+                 src => src.Issues.Select(issue => issue.Adapt<CirculationRecord>()).ToList())
+            .Map(dest => dest.ReturnedBooks, 
+                 src => src.Returns.Select(ret => ret.Adapt<CirculationRecord>()).ToList());
 
         TypeAdapterConfig<Book, BookDto>
             .NewConfig()
             .Map(dest => dest.BookAuthors, src => src.BookAuthors.Select(ba => ba.Author.Name).ToList())
             .Map(dest => dest.BookSubjects, src => src.BookSubjects.Select(bs => bs.Subject.Name).ToList());
+
+        TypeAdapterConfig<BookDto, Book>
+            .NewConfig()
+            .Map(dest => dest.BookAuthors, src => src.BookAuthors.Select(name => new BookAuthor { Author = new Author { Name = name } }).ToList())
+            .Map(dest => dest.BookSubjects, src => src.BookSubjects.Select(name => new BookSubject { Subject = new Subject { Name = name } }).ToList());
 
         TypeAdapterConfig<Issue, CirculationRecord>
             .NewConfig()

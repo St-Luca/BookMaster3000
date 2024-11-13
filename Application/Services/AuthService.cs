@@ -18,7 +18,7 @@ namespace Application.Services
             var user = await _userRepository.GetUserByUsername(username);
             
             if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))
-                return (false, $"{BCrypt.Net.BCrypt.HashPassword(password)}", null);
+                return (false, $"Wrong authentication data", null);
 
             return (true, "Authentification is complete", user);
         }
