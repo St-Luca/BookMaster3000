@@ -56,7 +56,6 @@ const fields = ref<{[key in keyof CreatedCustomer]: string}>({
 const errorMessage = ref();
 
 const inputValueChange = () => {
-  console.log('inp');
   errorMessage.value = '';
 }
 
