@@ -28,6 +28,7 @@ public static class MapsterConfig
         TypeAdapterConfig<Issue, CirculationRecord>
             .NewConfig()
             .Map(dest => dest.BookTitle, src => src.Book.Title)
+            .Map(dest => dest.BookSubtitle, src => src.Book.Subtitle)
             .Map(dest => dest.IssueFrom, src => src.IssueFrom)
             .Map(dest => dest.IssueTo, src => src.IssueTo)
             .Map(dest => dest.ReturnDate, src => src.ReturnDate);
