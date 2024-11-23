@@ -157,7 +157,7 @@ public class ClientCardService(
         var clients = await _clientCardRepository.GetAllClientCards();
 
         var circulationRecords = clients
-                                    .SelectMany(client => client.Returns.Concat(client.Issues))
+                                    .SelectMany(client => client.Returns)
                                     .Where(i => i.BookId == bookId)                             
                                     .OrderByDescending(i => i.IssueFrom)                       
                                     .Select(issue => issue.Adapt<CirculationRecord>())         
