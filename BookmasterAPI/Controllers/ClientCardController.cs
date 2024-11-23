@@ -11,12 +11,7 @@ public class ClientCardController(IClientCardService _clientService) : Controlle
     {
         var client = await _clientService.FindClientById(id);
 
-        if (client == null)
-        {
-            return Ok(new ClientCardDto());
-        }
-
-        return Ok(client);
+        return Ok(client ?? new ClientCardDto());
     }
 
     [HttpGet("search")]
@@ -24,12 +19,7 @@ public class ClientCardController(IClientCardService _clientService) : Controlle
     {
         var clients = await _clientService.FindClientsByName(name);
 
-        if (clients == null || !clients.Any())
-        {
-            return Ok(new List<ClientCardDto>());
-        }
-
-        return Ok(clients);
+        return Ok(clients ?? []);
     }
 
     [HttpPost]
@@ -95,5 +85,21 @@ public class ClientCardController(IClientCardService _clientService) : Controlle
         }
 
         return Ok(result.Record);
+    }
+
+    [HttpGet("reminders")]
+    public async Task<IActionResult> GetBookReminders()
+    {
+        var circulationRecords = await _clientService.GetBookReminders();
+
+        return Ok(circulationRecords ?? []);
+    }
+
+    [HttpGet("history/{bookId}")]
+    public async Task<IActionResult> GetBookCirculationHistory(int bookId)
+    {
+        var circulationRecords = await _clientService.GetBookCirculationHistory(bookId);
+
+        return Ok(circulationRecords ?? []);
     }
 }

@@ -132,6 +132,7 @@ public class ClientCardService(
                 };
 
                 clientCard.Issues.Add(issue);
+
                 await _clientCardRepository.EditClientCard(clientCard);
 
                 return (true, string.Empty, issue.Adapt<CirculationRecord>());
@@ -139,5 +140,29 @@ public class ClientCardService(
         }
 
         return (false, "Client card or book not found, or issues are filled", new CirculationRecord());
+    }
+
+    public async Task<List<CirculationRecord>> GetBookReminders()
+    {
+        var clients = await _clientCardRepository.GetAllClientCards();
+
+        return clients
+                .SelectMany(client => client.Issues)
+                .Select(issue => issue.Adapt<CirculationRecord>())
+                .ToList();
+    }
+
+    public async Task<List<CirculationRecord>> GetBookCirculationHistory(int bookId)
+    {
+        var clients = await _clientCardRepository.GetAllClientCards();
+
+        var circulationRecords = clients
+                                    .SelectMany(client => client.Returns.Concat(client.Issues))
+                                    .Where(i => i.BookId == bookId)                             
+                                    .OrderByDescending(i => i.IssueFrom)                       
+                                    .Select(issue => issue.Adapt<CirculationRecord>())         
+                                    .ToList();
+
+        return circulationRecords;
     }
 }
