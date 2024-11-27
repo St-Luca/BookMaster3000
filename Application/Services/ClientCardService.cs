@@ -160,7 +160,7 @@ public class ClientCardService(
         var circulationRecords = clients
                                     .SelectMany(client => client.Returns)
                                     .Where(i => i.BookId == bookId)                             
-                                    .OrderByDescending(i => i.IssueFrom)                       
+                                    .OrderBy(i => i.IssueFrom)                       
                                     .Select(issue => issue.Adapt<CirculationRecord>())         
                                     .ToList();
 
