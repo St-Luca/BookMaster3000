@@ -37,6 +37,7 @@ public class ClientCardService(
 
             return (true, string.Empty, clientData);
         }
+
         return (false, "Invalid client data", clientData);
     }
 

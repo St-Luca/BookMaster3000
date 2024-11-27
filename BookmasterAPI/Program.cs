@@ -32,6 +32,9 @@ public class Program
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
 
+        builder.Services.AddScoped<IExhibitionService, ExhibitionService>();
+        builder.Services.AddScoped<IExhibitionRepository, ExhibitionRepository>();
+
         builder.Services.AddControllers()
             .AddJsonOptions(options =>
             {

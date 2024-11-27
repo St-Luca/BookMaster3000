@@ -13,6 +13,7 @@ public class LibraryContext : DbContext
     public DbSet<BookAuthor> BookAuthors { get; set; }
     public DbSet<BookSubject> BookSubjects { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<Exhibition> Exhibitions { get; set; }
 
     public LibraryContext() {}
 
@@ -56,6 +57,11 @@ public class LibraryContext : DbContext
             .HasForeignKey(i => i.ClientCardId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        modelBuilder.Entity<Exhibition>()
+            .HasMany(e => e.Books)
+            .WithOne(b => b.Exhibition)
+            .HasForeignKey(b => b.ExhibitionId);
+
         modelBuilder.Entity<Author>().HasKey(a => a.Id);
         modelBuilder.Entity<Book>().HasKey(b => b.Id);
         modelBuilder.Entity<ClientCard>().HasKey(c => c.Id);
@@ -63,6 +69,7 @@ public class LibraryContext : DbContext
         modelBuilder.Entity<Loan>().HasKey(l => l.Id);
         modelBuilder.Entity<Subject>().HasKey(s => s.Id);
         modelBuilder.Entity<User>().HasKey(s => s.Id);
+        modelBuilder.Entity<Exhibition>().HasKey(s => s.Id);
 
         base.OnModelCreating(modelBuilder);
     }
