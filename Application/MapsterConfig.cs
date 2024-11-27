@@ -32,5 +32,13 @@ public static class MapsterConfig
             .Map(dest => dest.IssueFrom, src => src.IssueFrom)
             .Map(dest => dest.IssueTo, src => src.IssueTo)
             .Map(dest => dest.ReturnDate, src => src.ReturnDate);
+
+        TypeAdapterConfig<Exhibition, ExhibitionDto>
+            .NewConfig()
+            .Map(dest => dest.Books, src => src.Books.Adapt<ICollection<BookDto>>());
+
+        TypeAdapterConfig<ExhibitionDto, Exhibition>
+            .NewConfig()
+            .Map(dest => dest.Books, src => src.Books.Adapt<ICollection<Book>>());
     }
 }
