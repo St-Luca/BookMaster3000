@@ -11,7 +11,7 @@
 
         public DateTime PublicationDate {get; set;}
 
-        public int ExhibitionId { get; set; }
+        public int? ExhibitionId { get; set; }
 
         public Exhibition Exhibition { get; set; }
 
