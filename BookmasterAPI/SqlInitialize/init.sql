@@ -30,7 +30,7 @@ CREATE TABLE "Books" (
     "Description" TEXT,
     "PublicationDate" DATE,
     "CoverId" INT,
-    ExhibitionId INT,
+    "ExhibitionId" INT,
     FOREIGN KEY ("ExhibitionId") REFERENCES "Exhibitions" ("Id"),
     FOREIGN KEY ("CoverId") REFERENCES "Covers"("Id")
 );
