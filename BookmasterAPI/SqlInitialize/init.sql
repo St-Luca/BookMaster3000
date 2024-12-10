@@ -24,6 +24,8 @@ CREATE TABLE "Books" (
     "Description" TEXT,
     "PublicationDate" DATE,
     "CoverId" INT,
+    ExhibitionId INT,
+    FOREIGN KEY ("ExhibitionId") REFERENCES "Exhibitions" ("Id"),
     FOREIGN KEY ("CoverId") REFERENCES "Covers"("Id")
 );
 
@@ -80,6 +82,12 @@ CREATE TABLE IF NOT EXISTS "Users" (
     "Password" VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE  IF NOT EXISTS "Exhibitions" (
+    "Id" SERIAL PRIMARY KEY,
+    "Name" TEXT NOT NULL,
+    "Description" TEXT NOT NULL
+);
+
 INSERT INTO "Users" ("Username", "Password") VALUES
 ('user1', '$2a$11$cQxgooxZqEEhTH3E0mpTt.ylaV07f3oSFGlXmJzpL5d35TQhgp1AG'),
 ('user2', '$2a$11$cQxgooxZqEEhTH3E0mpTt.ylaV07f3oSFGlXmJzpL5d35TQhgp1AG'),
@@ -94,6 +102,13 @@ INSERT INTO "Users" ("Username", "Password") VALUES
 
 INSERT INTO "Covers" ("Description") 
 VALUES ('Пример обложки'); 
+
+INSERT INTO "Exhibitions" ("Name", "Description")
+VALUES
+('Modern Art', 'An exhibition showcasing modern art pieces.'),
+('Classic Literature', 'An exhibition of books from classic literature.'),
+('Science Innovations', 'A display of books and articles about scientific discoveries.');
+
 
 INSERT INTO "Books" ("Title", "Subtitle", "Description", "PublicationDate", "CoverId") 
 VALUES 
@@ -308,6 +323,18 @@ VALUES
 ('Book 199', 'Subtitle 199', 'Description 199', '2017-07-01', NULL),
 ('Book 200', 'Subtitle 200', 'Description 200', '2017-08-01', NULL);
 
+INSERT INTO "Books" ("Title", "Description", "Subtitle", "PublicationDate", "ExhibitionId")
+VALUES
+('Book 1', 'Description for book 1', 'Subtitle 1', '2020-01-01', 1),
+('Book 2', 'Description for book 2', 'Subtitle 2', '2020-02-01', 1),
+('Book 3', 'Description for book 3', 'Subtitle 3', '2020-03-01', 1),
+('Book 4', 'Description for book 4', 'Subtitle 4', '2020-04-01', 2),
+('Book 5', 'Description for book 5', 'Subtitle 5', '2020-05-01', 2),
+('Book 6', 'Description for book 6', 'Subtitle 6', '2020-06-01', 2),
+('Book 7', 'Description for book 7', 'Subtitle 7', '2020-07-01', 3),
+('Book 8', 'Description for book 8', 'Subtitle 8', '2020-08-01', 3),
+('Book 9', 'Description for book 9', 'Subtitle 9', '2020-09-01', 3),
+('Book 10', 'Description for book 10', 'Subtitle 10', '2020-10-01', 3);
 
 INSERT INTO "Clients" ("Name", "City", "Zip", "Address", "Email", "Phone") 
 VALUES 
