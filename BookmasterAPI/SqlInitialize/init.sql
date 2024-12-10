@@ -76,13 +76,13 @@ CREATE TABLE "Issues" (
     FOREIGN KEY ("BookId") REFERENCES "Books"("Id")
 );
 
-CREATE TABLE IF NOT EXISTS "Users" (
+CREATE TABLE "Users" (
     "Id" SERIAL PRIMARY KEY,
     "Username" VARCHAR(50) UNIQUE NOT NULL,
     "Password" VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE  IF NOT EXISTS "Exhibitions" (
+CREATE TABLE "Exhibitions" (
     "Id" SERIAL PRIMARY KEY,
     "Name" TEXT NOT NULL,
     "Description" TEXT NOT NULL
