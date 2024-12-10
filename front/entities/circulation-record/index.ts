@@ -1,1 +1,1 @@
-export { type CirculationRecord } from "./types"
+export { type CirculationRecord, type ApiResultCirculationRecord } from "./types"

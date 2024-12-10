@@ -1,4 +1,4 @@
-import type { CirculationRecord } from "~/entities/circulation-record";
+import type { ApiResultCirculationRecord, CirculationRecord } from "~/entities/circulation-record";
 
 export interface Customer {
   id: string|number;
@@ -8,8 +8,20 @@ export interface Customer {
   city?: string;
   address?: string;
   zip?: string;
-  hasBooks: CirculationRecord[];
-  circulationHistory: CirculationRecord[];
+  issuedBooks: CirculationRecord[];
+  returnedBooks: CirculationRecord[];
+}
+
+export interface ApiResultCustomer {
+  id: string|number;
+  name: string;
+  phone: string;
+  email: string;
+  city?: string;
+  address?: string;
+  zip?: string;
+  issuedBooks: ApiResultCirculationRecord[];
+  returnedBooks: ApiResultCirculationRecord[];
 }
 
 export interface CustomerSearchParams {

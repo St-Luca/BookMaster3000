@@ -25,7 +25,7 @@ const handleSubmit = () => {
   if (!searchParams.value.id) return;
   
   getCustomer(searchParams.value.id)
-    .then(res => emit('result', res))
+    .then(res => {emit('result', res); console.log(res) })
     .catch(err => emit('result', undefined));
 };
 </script>

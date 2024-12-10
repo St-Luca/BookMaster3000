@@ -44,7 +44,6 @@ const handleSubmit = () => {
         class="flex flex-col items-center"
         @submit="handleSubmit"
       >
-      <!-- class="flex flex-col items-center" -->
         <h1 class="text-lg">Вход</h1>
         <div class="w-full space-y-4 mt-2">
           <UFormGroup

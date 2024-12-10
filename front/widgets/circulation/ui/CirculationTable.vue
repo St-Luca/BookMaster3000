@@ -39,7 +39,7 @@ const cols = ref([
 ])
 
 interface Row {
-  bookId: string|number;
+  // bookId: string|number;
   name: string;
   issued: string;
   returned: string;
@@ -47,11 +47,11 @@ interface Row {
 }
 
 const rows = computed<Row[]>(() => props.items.map(item => ({
-  bookId: item.book.id,
-  name: item.book.title,
-  issued: item.issueDate.toISOString().substring(0, 10),
-  returnPlanned: item.returnDatePlanned.toISOString().substring(0, 10),
-  returned: item.returnDateActual?.toISOString().substring(0, 10) ?? "Не возвращено",
+  // bookId: item.book.id,
+  name: item.bookTitle,
+  issued: item.issueFrom.toISOString().substring(0, 10),
+  returnPlanned: item.issueTo.toISOString().substring(0, 10),
+  returned: item.returnDate?.toISOString().substring(0, 10) ?? "Не возвращено",
 })))
 
 const actionItems = (row: Row) => [

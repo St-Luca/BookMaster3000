@@ -2,7 +2,7 @@
 import type { Book } from '~/entities/book';
 import type { BookListResponse } from '~/entities/book/types';
 import { BrowseLayout, BrowseList } from '~/features/browse';
-import { BookCard, BookSearchParams } from '~/widgets/browse-books';
+import { BookCard, BookSearchParams } from '~/widgets/books';
 
 definePageMeta({
   layout: 'full-height',
