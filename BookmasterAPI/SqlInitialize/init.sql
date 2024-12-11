@@ -14,7 +14,9 @@ CREATE TABLE "Subjects" (
 
 CREATE TABLE "Covers" (
     "Id" SERIAL PRIMARY KEY,
-    "Description" VARCHAR(255) NOT NULL
+    "Description" VARCHAR(255) NOT NULL,
+    "BookId" INT NOT NULL,
+    FOREIGN KEY ("BookId") REFERENCES "Books"("Id")
 );
 
 CREATE TABLE "Exhibitions" (
@@ -31,8 +33,7 @@ CREATE TABLE "Books" (
     "PublicationDate" DATE,
     "CoverId" INT,
     "ExhibitionId" INT,
-    FOREIGN KEY ("ExhibitionId") REFERENCES "Exhibitions" ("Id"),
-    FOREIGN KEY ("CoverId") REFERENCES "Covers"("Id")
+    FOREIGN KEY ("ExhibitionId") REFERENCES "Exhibitions" ("Id")
 );
 
 CREATE TABLE "BookAuthors" (
