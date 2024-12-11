@@ -5,7 +5,6 @@ import type { ApiResultCirculationRecord, CirculationRecord } from "~/entities/c
 const circulationRecordsToDomain = (data:ApiResultCirculationRecord[]) : CirculationRecord[] => 
   data.map((b,i) => ({
     ...b,
-    key: i,
     issueFrom: new Date(b.issueFrom),
     issueTo: new Date(b.issueTo),
     returnDate: new Date(b.returnDate),

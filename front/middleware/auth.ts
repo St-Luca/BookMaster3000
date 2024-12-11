@@ -8,6 +8,7 @@ const noAuthAccess = ref([
 ] as Array<any>)
 
 export default defineNuxtRouteMiddleware((to, from) => {
+  authStore.isAuth = true;
   if (!authStore.isAuth && !noAuthAccess.value.includes(to.name)) {
     return navigateTo('/auth');
   }

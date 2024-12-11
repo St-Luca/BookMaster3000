@@ -1,10 +1,16 @@
 import type { Book } from "../book";
 
 export interface Exhibition {
+  id: string|number;
   name: string;
   description: string;
   dateCreated: string;
   books: Book[];
+}
+
+export interface CreatedExhibition {
+  name: string;
+  description: string;
 }
 
 export interface ExhibitionsListResponse {
@@ -22,6 +28,7 @@ export const exhibitionsListSample: ExhibitionsListResponse = {
   pages: 5,
   exhibitions: [
     {
+      id: 1,
       name: "International Book Fair",
       description: "The annual international book fair at the University of Helsinki",
       dateCreated: "2022-01-01",
@@ -89,6 +96,7 @@ export const exhibitionsListSample: ExhibitionsListResponse = {
       ]
     },
     {
+      id: 2,
       name: "Book Fair 2022",
       description: "The annual international book fair at the University of Helsinki",
       dateCreated: "2022-02-01",
@@ -171,6 +179,7 @@ export const exhibitionsListSample: ExhibitionsListResponse = {
       ]
     },
     {
+      id: 3,
       name: "Book Fair 2023",
       description: "The annual international book fair at the University of Helsinki",
       dateCreated: "2023-01-01",

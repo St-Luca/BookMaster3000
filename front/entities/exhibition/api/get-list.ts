@@ -1,5 +1,5 @@
 import { api } from "~/shared/util"
-import { exhibitionsListSample, type ExhibitionsListResponse } from "../types";
+import { exhibitionsListSample, type Exhibition, type ExhibitionsListResponse } from "../types";
 
 type ApiResponse = {
   itemsCount: number
@@ -7,6 +7,7 @@ type ApiResponse = {
   pageLimit: number;
   pages: number;
   exhibitions: Array<{
+    id: string|number;
     name: string;
     description: string;
     dateCreated: string;
@@ -22,13 +23,13 @@ type ApiResponse = {
   }>
 }
 
-export const getExhibitionsList = () : Promise<ExhibitionsListResponse|false> => {
-  // return new Promise((resolve) => resolve(exhibitionsListSample));
-  return api<ApiResponse>(`/Exhibition/?page=${1}`, {
+export const getExhibitionsList = () : Promise<Array<Exhibition>> => {
+  // return new Promise((resolve) => resolve(exhibitionsListSample.exhibitions));
+  return api<ApiResponse>(`/Exhibition/?page=-1`, {
     method: "GET",
   }).then(res => {
-    if (!res._data) return false;
-    if (res.statusText !== "OK") return false;
+    if (!res._data) return [];
+    if (res.statusText !== "OK") return [];
     return {
       ...res._data,
       exhibitions: res._data.exhibitions.map(ex => ({
@@ -42,6 +43,6 @@ export const getExhibitionsList = () : Promise<ExhibitionsListResponse|false> =>
           subjects: apiBook.bookSubjects
         }))
       }))
-    }
+    }.exhibitions
   })
 }

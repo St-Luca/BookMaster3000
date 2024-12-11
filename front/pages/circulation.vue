@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { Customer } from '~/entities/customer';
+import { getCustomer } from '~/entities/customer/api/get';
 import BrowseLayout from '~/features/browse/ui/BrowseLayout.vue';
 import CirculationCard from '~/widgets/circulation/ui/CirculationCard.vue';
 import CirculationSearchParams from '~/widgets/circulation/ui/CirculationSearchParams.vue';
@@ -13,9 +14,19 @@ const searchDone = ref(false);
 
 const currentCustomer = ref<Customer|undefined>(undefined);
 
-const handleSearchResult = (res?:Customer) => {
-  searchDone.value = true;
-  currentCustomer.value = res;
+const lastCustomerId = ref<string>('');
+const key = ref(0)
+
+const handleSearchResult = (id?:string) => {
+  getCustomer(id ?? lastCustomerId.value).then(res => {
+    if (res) {
+      console.log('handleSearchResult', id, lastCustomerId.value);
+      lastCustomerId.value = id ?? lastCustomerId.value;
+      searchDone.value = true;
+      currentCustomer.value = res;
+      key.value++;
+    }
+  })
 }
 </script>
 
@@ -24,14 +35,16 @@ const handleSearchResult = (res?:Customer) => {
     <template #sidebar>
       <CirculationSearchParams
         class="h-full"
-        @result="handleSearchResult"
+        @submit="handleSearchResult"
       />
     </template>
     <template #top>
       <CirculationCard
         v-if="currentCustomer"
         :customer="currentCustomer"
+        :key="key"
         class="h-full"
+        @refresh="handleSearchResult"
       />
       <UCard
         v-else

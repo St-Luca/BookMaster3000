@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { useAuthStore } from '~/features/auth/store';
 import { CustomerModal } from '~/widgets/customers';
+import { CreateExhibitionModal } from '~/widgets/exhibitions';
 
 const authStore = useAuthStore();
 
@@ -135,6 +136,8 @@ const filteredItems = (items:Array<MenuItem>) => {
         </nav>
       </template>
     </UCard>
+
     <CustomerModal v-model="isOpenCustomerModal"></CustomerModal>
+    <CreateExhibitionModal v-model="isOpenExhibitionModal" />
   </header>
 </template>

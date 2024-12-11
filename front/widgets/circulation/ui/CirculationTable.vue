@@ -14,6 +14,10 @@ const emit = defineEmits<{
 
 const cols = ref([
   {
+    key: 'bookId',
+    label: 'ID',
+  },
+  {
     key: 'name',
     label: 'Название',
   },
@@ -39,18 +43,21 @@ const cols = ref([
 ])
 
 interface Row {
-  // bookId: string|number;
+  bookId: string|number;
   name: string;
   issued: string;
   returned: string;
-  returnPlanned: string;
+  returnPlanned: { value: string, class: string };
 }
 
 const rows = computed<Row[]>(() => props.items.map(item => ({
-  // bookId: item.book.id,
+  bookId: item.bookId,
   name: item.bookTitle,
   issued: item.issueFrom.toISOString().substring(0, 10),
-  returnPlanned: item.issueTo.toISOString().substring(0, 10),
+  returnPlanned: {
+    value: item.issueTo.toISOString().substring(0, 10),
+    class: item.isOverdue ? '!text-red-500' : ''
+  },
   returned: item.returnDate?.toISOString().substring(0, 10) ?? "Не возвращено",
 })))
 
@@ -75,7 +82,7 @@ const actionItems = (row: Row) => [
       :rows="rows"
       :empty-state="{ icon: 'i-heroicons-circle-stack-20-solid', label: 'Нет записей' }"
       :ui="{
-        wrapper: ({ base: 'h-full overflow-y-auto' } as any),
+        wrapper: ({ base: 'h-full overflow-y-scroll' } as any),
         base: 'divide-y-0',
         th: {
           base: `
@@ -94,6 +101,9 @@ const actionItems = (row: Row) => [
         <UDropdown :items="actionItems(row)">
           <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
         </UDropdown>
+      </template>
+      <template #returnPlanned-data="{ row }">
+        {{ row.returnPlanned.value }}
       </template>
     </UTable>
   <!-- </div> -->

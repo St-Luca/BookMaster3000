@@ -10,7 +10,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (event: 'result', value: Customer|undefined): void
+  (event: 'submit', value: string): void
 }>();
 
 const searchParams = ref<Partial<CustomerSearchParams>>({
@@ -23,10 +23,8 @@ const fieldNames = ref<{[key in keyof CustomerSearchParams]?: string}>({
 
 const handleSubmit = () => {
   if (!searchParams.value.id) return;
-  
-  getCustomer(searchParams.value.id)
-    .then(res => {emit('result', res); console.log(res) })
-    .catch(err => emit('result', undefined));
+
+  emit("submit", searchParams.value.id)
 };
 </script>
 

@@ -1,7 +1,7 @@
 import type { Book } from "~/entities/book";
 
 export interface CirculationRecord {
-  key: string|number;
+  bookId: string|number;
   bookTitle: string;
   issueFrom: Date;
   issueTo: Date;
@@ -10,6 +10,7 @@ export interface CirculationRecord {
 }
 
 export interface ApiResultCirculationRecord {
+  bookId: string|number;
   bookTitle: string;
   bookSubtitle: string;
   issueFrom: string;

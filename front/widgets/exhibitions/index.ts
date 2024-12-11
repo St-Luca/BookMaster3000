@@ -1,0 +1,1 @@
+export { default as CreateExhibitionModal } from "./ui/CreateModal.vue"

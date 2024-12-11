@@ -1,10 +1,12 @@
 <script lang="ts" setup>
 import { getExhibitionsList } from '~/entities/exhibition/api/get-list';
+import { useExhibitionsStore } from '~/entities/exhibition/store';
 import ExhibitionCard from '~/widgets/exhibitions/ui/ExhibitionCard.vue';
 
-const { data, status } = useAsyncData(async () => {
-  const list = await getExhibitionsList();
-  return list;
+const exhibitionsStore = useExhibitionsStore();
+
+const { status } = useAsyncData(async () => {
+  exhibitionsStore.fetch();
 }, { immediate: true })
 
 definePageMeta({
@@ -16,17 +18,18 @@ definePageMeta({
 
 <template>
   <UCard
+    class="h-full"
     :ui="{
       body: {
-        base: 'h-full',
+        base: 'h-full overflow-y-scroll',
       },
     }"
   >
-    <div v-if="!!data && data.exhibitions.length">
+    <div v-if="exhibitionsStore.list.length" class="h-full">
       <h1 class="text-xl font-medium mb-3">Выставки</h1>
       <div class="divide-y divide-gray-300">
         <ExhibitionCard
-          v-for="ex in data.exhibitions"
+          v-for="ex in exhibitionsStore.list"
           :data="ex"
         ></ExhibitionCard>
       </div>

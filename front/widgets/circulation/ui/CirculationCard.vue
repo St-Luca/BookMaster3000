@@ -16,7 +16,9 @@ const emit = defineEmits<{
 const issueBookId = ref('');
 
 const handleIssue = () => {
-  issueBook(props.customer.id, issueBookId.value);
+  issueBook(props.customer.id, issueBookId.value).then(res => {
+    if (res) emit("refresh")
+  });
 }
 
 const handleExtend = (bookId: string|number) => {

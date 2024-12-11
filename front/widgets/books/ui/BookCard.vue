@@ -58,6 +58,7 @@ const authorYears = computed<string|undefined>(() => {
 const exhibitionsModalOpen = ref(false);
 
 const handleExhibitionsClick = () => {
+  console.log(exhibitionsModalOpen.value);
   exhibitionsModalOpen.value = !exhibitionsModalOpen.value;
 }
 </script>
@@ -130,6 +131,8 @@ const handleExhibitionsClick = () => {
       Выберите книгу для просмотра
     </div>
 
-    <ExhibitionsModal v-modal="exhibitionsModalOpen"></ExhibitionsModal>
+    <KeepAlive>
+      <ExhibitionsModal v-model="exhibitionsModalOpen" :book="book!" />
+    </KeepAlive>
   </UCard>
 </template>
