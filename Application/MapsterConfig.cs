@@ -27,6 +27,7 @@ public static class MapsterConfig
 
         TypeAdapterConfig<Issue, CirculationRecord>
             .NewConfig()
+            .Map(dest => dest.BookId, src => src.BookId)
             .Map(dest => dest.BookTitle, src => src.Book.Title)
             .Map(dest => dest.BookSubtitle, src => src.Book.Subtitle)
             .Map(dest => dest.IssueFrom, src => src.IssueFrom)
@@ -35,10 +36,13 @@ public static class MapsterConfig
 
         TypeAdapterConfig<Exhibition, ExhibitionDto>
             .NewConfig()
-            .Map(dest => dest.Books, src => src.Books.Adapt<ICollection<BookDto>>());
+            .Map(dest => dest.Books,
+                src => src.Books != null ? src.Books.Adapt<ICollection<BookDto>>() : new List<BookDto>());
 
         TypeAdapterConfig<ExhibitionDto, Exhibition>
             .NewConfig()
-            .Map(dest => dest.Books, src => src.Books.Adapt<ICollection<Book>>());
+            .Map(dest => dest.Books,
+                src => src.Books != null ? src.Books.Adapt<ICollection<Book>>() : new List<Book>());
+
     }
 }

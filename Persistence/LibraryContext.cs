@@ -62,6 +62,11 @@ public class LibraryContext : DbContext
             .WithOne(b => b.Exhibition)
             .HasForeignKey(b => b.ExhibitionId);
 
+        modelBuilder.Entity<Book>()
+        .HasMany(b => b.Covers)
+        .WithOne(c => c.Book)
+        .HasForeignKey(c => c.BookId);
+
         modelBuilder.Entity<Author>().HasKey(a => a.Id);
         modelBuilder.Entity<Book>().HasKey(b => b.Id);
         modelBuilder.Entity<ClientCard>().HasKey(c => c.Id);
