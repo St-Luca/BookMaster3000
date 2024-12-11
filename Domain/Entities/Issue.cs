@@ -27,7 +27,7 @@ public class Issue
 
     public void RenewReturnDateByWeek()
     {
-        IssueTo = IssueTo.AddDays(7);
+        IssueTo = IssueTo.AddDays(7).ToUniversalTime();
         IsRenewed = true;
     }
 }
