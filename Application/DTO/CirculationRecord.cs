@@ -8,5 +8,5 @@ public class CirculationRecord
     public DateTime IssueFrom { get; set; }
     public DateTime IssueTo { get; set; }
     public DateTime? ReturnDate { get; set; }
-    public bool IsOverdue => IssueTo > DateTime.Now;
+    public bool IsOverdue => IssueTo <= DateTime.Now;
 }

@@ -36,10 +36,13 @@ public static class MapsterConfig
 
         TypeAdapterConfig<Exhibition, ExhibitionDto>
             .NewConfig()
-            .Map(dest => dest.Books, src => src.Books.Adapt<ICollection<BookDto>>());
+            .Map(dest => dest.Books,
+                src => src.Books != null ? src.Books.Adapt<ICollection<BookDto>>() : new List<BookDto>());
 
         TypeAdapterConfig<ExhibitionDto, Exhibition>
             .NewConfig()
-            .Map(dest => dest.Books, src => src.Books.Adapt<ICollection<Book>>());
+            .Map(dest => dest.Books,
+                src => src.Books != null ? src.Books.Adapt<ICollection<Book>>() : new List<Book>());
+
     }
 }

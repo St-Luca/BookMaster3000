@@ -13,7 +13,7 @@
 
         public int? ExhibitionId { get; set; }
 
-        public Exhibition Exhibition { get; set; }
+        public Exhibition? Exhibition { get; set; }
 
         public ICollection<Cover> Covers { get; set; }
         public ICollection<BookAuthor> BookAuthors { get; set; }
