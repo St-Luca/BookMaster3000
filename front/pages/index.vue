@@ -4,5 +4,5 @@ definePageMeta({
   name: "main",
 })
 
-// useRouter().replace('/browse-books');
+useRouter().replace('/browse-books');
 </script>

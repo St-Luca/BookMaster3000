@@ -5,8 +5,7 @@ export const createExhibition = (params:CreatedExhibition) => {
   return api<any>(`/Exhibition`, {
     method: "POST",
     body: {
-      ...params,
-      books: []
+      ...params
     }
   }).then(res => {
     if (!res._data) return false;

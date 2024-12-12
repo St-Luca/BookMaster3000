@@ -12,7 +12,7 @@ const booksShown = ref(false);
 <template>
   <div class="py-4">
     <h3 class="text-lg mb-1">{{ data.name }}</h3>
-    <p>Дата создания: {{ data.dateCreated }}</p>
+    <!-- <p>Дата создания: {{ data.dateCreated }}</p> -->
     <p class="text-gray-800">{{ data.description }}</p>
     <div>
       <div

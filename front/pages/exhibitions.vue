@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { getExhibitionsList } from '~/entities/exhibition/api/get-list';
 import { useExhibitionsStore } from '~/entities/exhibition/store';
 import ExhibitionCard from '~/widgets/exhibitions/ui/ExhibitionCard.vue';
 

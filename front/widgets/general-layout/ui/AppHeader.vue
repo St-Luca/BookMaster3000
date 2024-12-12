@@ -22,7 +22,7 @@ const items = ref<Record<'left'|'right', Array<MenuItem>>>({
     {
       label: "Книги",
       to: "/browse-books",
-      authOnly: true
+      // authOnly: true
     },
     {
       label: "Клиенты",

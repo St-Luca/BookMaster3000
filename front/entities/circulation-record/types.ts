@@ -1,5 +1,3 @@
-import type { Book } from "~/entities/book";
-
 export interface CirculationRecord {
   bookId: string|number;
   bookTitle: string;
