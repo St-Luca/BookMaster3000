@@ -1,8 +1,12 @@
 <script lang="ts" setup>
 import type { Author } from '~/entities/author';
 import type { Book } from '~/entities/book';
+import { useAuthStore } from '~/features/auth/store';
 import { DetailInfo } from '~/features/browse';
 import { parseDate } from '~/shared/util';
+import ExhibitionsModal from './ExhibitionsModal.vue';
+
+const authStore = useAuthStore();
 
 const props = defineProps<{
   book?: Book,
@@ -49,12 +53,19 @@ const authorYears = computed<string|undefined>(() => {
   }
   if (death) return `умер нерождённым в ${death} году`;
   return undefined;
-})
+});
+
+const exhibitionsModalOpen = ref(false);
+
+const handleExhibitionsClick = () => {
+  console.log(exhibitionsModalOpen.value);
+  exhibitionsModalOpen.value = !exhibitionsModalOpen.value;
+}
 </script>
 
 <template>
   <UCard
-    class="relative overflow-y-scroll pt-0"
+    class="relative overflow-y-auto pt-0"
   >
     <div v-if="book">
       <DetailInfo
@@ -75,6 +86,13 @@ const authorYears = computed<string|undefined>(() => {
               <h4 class="text-lg m-0">Описание:</h4>
               <p>{{ book.description }}</p>
             </div>
+            <UButton
+              v-if="authStore.isAuth"
+              class="mt-2"
+              @click="handleExhibitionsClick"
+            >
+              Настроить выставки
+            </UButton>
           </div>
         </template>
       </DetailInfo>
@@ -112,5 +130,9 @@ const authorYears = computed<string|undefined>(() => {
     >
       Выберите книгу для просмотра
     </div>
+
+    <KeepAlive>
+      <ExhibitionsModal v-model="exhibitionsModalOpen" :book="book!" />
+    </KeepAlive>
   </UCard>
 </template>

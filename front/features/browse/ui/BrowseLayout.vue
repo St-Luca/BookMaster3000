@@ -7,7 +7,7 @@
     <div class="w-[30%]">
       <slot name="sidebar" />
     </div>
-    <div class="grow flex flex-col justify-between gap-4  h-full max-h-full">
+    <div class="grow flex flex-col justify-between gap-4 h-full max-h-full">
       <div
         :class="{
           'h-[50%]': $slots.bottom,

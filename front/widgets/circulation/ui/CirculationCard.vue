@@ -16,7 +16,9 @@ const emit = defineEmits<{
 const issueBookId = ref('');
 
 const handleIssue = () => {
-  issueBook(props.customer.id, issueBookId.value);
+  issueBook(props.customer.id, issueBookId.value).then(res => {
+    if (res) emit("refresh")
+  });
 }
 
 const handleExtend = (bookId: string|number) => {
@@ -61,7 +63,7 @@ const handleReturn = (bookId: string|number) => {
       <div class="flex flex-col" :style="{ height: 'calc(50% - 16px)', maxHeight: 'calc(50% - 16px)' }">
         <h3 class="text-lg mb-1">Выданные книги</h3>
         <CirculationTable
-          :items="customer.hasBooks ?? []"
+          :items="customer.issuedBooks ?? []"
           class="h-full"
           @extend="handleExtend"
           @return="handleReturn"
@@ -70,7 +72,7 @@ const handleReturn = (bookId: string|number) => {
       <div class="flex flex-col" :style="{ height: 'calc(50% - 16px)', maxHeight: 'calc(50% - 16px)' }">
         <h3 class="text-lg mb-1">История</h3>
         <CirculationTable
-          :items="customer.circulationHistory ?? []"
+          :items="customer.returnedBooks ?? []"
           class="h-full"
           past
         />

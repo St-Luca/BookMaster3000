@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { useAuthStore } from '~/features/auth/store';
 import { CustomerModal } from '~/widgets/customers';
+import { CreateExhibitionModal } from '~/widgets/exhibitions';
 
 const authStore = useAuthStore();
 
@@ -11,14 +12,17 @@ interface MenuItem {
   to?: string;
   dropdown?: MenuItem[][];
   click?: () => void;
+  authOnly?: boolean;
+  noAuthOnly?: boolean;
   class?: string;
 }
 
-const items = ref<Record<string, Array<MenuItem>>>({
+const items = ref<Record<'left'|'right', Array<MenuItem>>>({
   left: [
     {
       label: "Книги",
-      to: "/browse-books"
+      to: "/browse-books",
+      // authOnly: true
     },
     {
       label: "Клиенты",
@@ -33,11 +37,34 @@ const items = ref<Record<string, Array<MenuItem>>>({
           click: () => isOpenCustomerModal.value = true,
           class: "bg-white hover:bg-gray-50"
         },
-      ]]
+      ]],
+      authOnly: true
     },
     {
       label: "Циркуляция",
-      to: "/circulation"
+      to: "/circulation",
+      authOnly: true
+    },
+    {
+      label: "Выставки",
+      to: "/exhibitions",
+      noAuthOnly: true
+    },
+    {
+      label: "Выставки",
+      authOnly: true,
+      dropdown: [[
+        {
+          label: "Просмотр",
+          to: "/exhibitions",
+          class: "bg-white hover:bg-gray-50"
+        },
+        {
+          label: "Создать",
+          click: () => isOpenExhibitionModal.value = true,
+          class: "bg-white hover:bg-gray-50"
+        },
+      ]],
     },
   ],
   right: [
@@ -45,13 +72,26 @@ const items = ref<Record<string, Array<MenuItem>>>({
       label: "Выйти",
       click: () => {
         authStore.logout();
-        router.push("/auth")
+        router.push("/")
       },
+      authOnly: true
+    },
+    {
+      label: "Войти",
+      to: "/auth",
+      noAuthOnly: true
     }
   ]
 });
 
 const isOpenCustomerModal = ref(false);
+const isOpenExhibitionModal = ref(false);
+
+const filteredItems = (items:Array<MenuItem>) => {
+  return items.filter(item => 
+    (!item.authOnly || authStore.isAuth) && (!item.noAuthOnly || !authStore.isAuth)
+  );
+}
 
 </script>
 
@@ -66,8 +106,8 @@ const isOpenCustomerModal = ref(false);
     >
       <template #default>
         <nav class="flex justify-between">
-          <div v-for="itemsOnSide in items" class="flex gap-2">
-            <template v-for="item in itemsOnSide">
+          <div v-for="itemsOnSide in [items.left, items.right]" class="flex gap-2">
+            <template v-for="item in filteredItems(itemsOnSide)">
               <UDropdown
                 v-if="item.dropdown"
                 :items="item.dropdown"
@@ -96,6 +136,8 @@ const isOpenCustomerModal = ref(false);
         </nav>
       </template>
     </UCard>
+
     <CustomerModal v-model="isOpenCustomerModal"></CustomerModal>
+    <CreateExhibitionModal v-model="isOpenExhibitionModal" />
   </header>
 </template>

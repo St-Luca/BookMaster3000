@@ -25,7 +25,7 @@ const isOpenModal = ref(false);
     class="relative pt-0"
   >
     <div v-if="customer" class="flex divide-x divide-gray-200">
-      <div class="pr-6 w-[40%]">
+      <div class="pr-6">
         <h3 class="flex items-baseline text-xl mb-3">
           <div>{{ customer.name }}</div>
         </h3>
@@ -47,15 +47,15 @@ const isOpenModal = ref(false);
           </ul>
         </div>
       </div>
-      <div class="grow pl-6">
+      <!-- <div class="grow pl-6">
         <h4 class="flex items-baseline text-xl mb-3">
           <div>Взятые книги:</div>
         </h4>
-      </div>
+      </div> -->
     </div>
     <div
       v-else
-      class="absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center h-full"
+      class="absolute inset-0 flex justify-center items-center h-full"
     >
       Выберите клиента для просмотра
     </div>
