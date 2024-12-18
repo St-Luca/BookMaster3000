@@ -11,7 +11,7 @@ namespace Application.DTO
 
         public string Address { get; set; }
 
-        public List<CirculationRecord> IssuedBooks { get; set; }
-        public List<CirculationRecord> ReturnedBooks { get; set; }
+        public List<CirculationRecord> IssuedBooks { get; set; } = [];
+        public List<CirculationRecord> ReturnedBooks { get; set; } = [];
     }
 }

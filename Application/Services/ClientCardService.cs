@@ -149,6 +149,7 @@ public class ClientCardService(
 
         return clients
                 .SelectMany(client => client.Issues)
+                .Where(i => i.IssueTo < DateTime.Now.ToUniversalTime())
                 .Select(issue => issue.Adapt<CirculationRecord>())
                 .ToList();
     }

@@ -9,7 +9,8 @@ namespace Application.Services;
 
 public class ExhibitionService(
     IExhibitionRepository _exhibitionRepository,
-    IBookRepository _bookRepository) : IExhibitionService
+    IBookRepository _bookRepository,
+    IExhibitionBookRepository _exhibitionBookRepository) : IExhibitionService
 {
     public byte PaginationLimit => 50;
 
@@ -23,7 +24,17 @@ public class ExhibitionService(
 
             if(book != null)
             {
-                exhibition.Books.Add(book);
+                var exhibitionBook = new ExhibitionBook
+                {
+                    ExhibitionId = exhibitionId,
+                    BookId = bookId,
+                    Exhibition = exhibition,
+                    Book = book
+                };
+
+                exhibition.ExhibitionBooks.Add(exhibitionBook);
+                
+                await _exhibitionBookRepository.AddExhibitionBook(exhibitionBook);
                 await _exhibitionRepository.EditExhibition(exhibition);
 
                 return (true, string.Empty);
@@ -40,6 +51,8 @@ public class ExhibitionService(
         if (exhibitionDto != null && exhibitionDto.Name != "")
         {
             var newExhibition = exhibitionDto.Adapt<Exhibition>();
+            newExhibition.CreatedDate = DateTime.Now.ToUniversalTime();
+
             await _exhibitionRepository.CreateExhibition(newExhibition);
 
             return (true, string.Empty, exhibitionDto);
@@ -75,10 +88,20 @@ public class ExhibitionService(
 
             if (book != null)
             {
-                exhibition.Books.Remove(book);
-                await _exhibitionRepository.EditExhibition(exhibition);
+                var exhibitionBook = exhibition.ExhibitionBooks
+                    .FirstOrDefault(eb => eb.BookId == bookId);
 
-                return (true, string.Empty);
+                if (exhibitionBook != null)
+                {
+                    exhibition.ExhibitionBooks.Remove(exhibitionBook);
+
+                    await _exhibitionBookRepository.RemoveExhibitionBook(exhibitionBook);
+                    await _exhibitionRepository.EditExhibition(exhibition);
+
+                    return (true, string.Empty);
+                }
+
+                return (false, "Book not associated with the exhibition");
             }
 
             return (false, "Book not found");
