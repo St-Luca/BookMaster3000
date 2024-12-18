@@ -39,7 +39,7 @@ const toggleBook = async (ex:Exhibition) => {
       }"
     >
       <div class="h-full flex flex-col justify-between overflow-hidden min-h-0">
-        <h2 class="text-xl mb-3">Настроить выставки</h2>
+        <h2 class="text-xl mb-3">{{book.title}}: настроить выставки</h2>
         <div class="pr-1.5 grow min-h-0 overflow-y-auto scrollbar-w-[3px] scrollbar scrollbar-thumb-slate-400 scrollbar-thumb-rounded-[4px]">
           <div class="flex flex-col divide-y divide-gray-200">
             <div

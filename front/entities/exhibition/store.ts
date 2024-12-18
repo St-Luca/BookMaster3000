@@ -41,10 +41,13 @@ export const useExhibitionsStore = defineStore('exhibitions', {
       }
       if (res) this.fetch();
     },
-    hasBook(ex: string|number, bookId: string|number) {
-      const exhibition = this.list.find(e => e.id === ex);
+    hasBook(exId: string|number, bookId: string|number) {
+      const exhibition = this.list.find(e => e.id === exId);
       if (!exhibition) return false;
       return exhibition.books.some(b => b.id === bookId);
+    },
+    getById(id: number|string) {
+      return this.list.find(e => e.id === id);
     }
   }
 })

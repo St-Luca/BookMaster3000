@@ -30,6 +30,7 @@ definePageMeta({
         <ExhibitionCard
           v-for="ex in exhibitionsStore.list"
           :data="ex"
+          :key="ex.id"
         ></ExhibitionCard>
       </div>
     </div>
