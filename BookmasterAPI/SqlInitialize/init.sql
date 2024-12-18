@@ -14,6 +14,7 @@ CREATE TABLE "Subjects" (
 
 CREATE TABLE "Exhibitions" (
     "Id" SERIAL PRIMARY KEY,
+    "CreatedDate" DATE,
     "Name" TEXT NOT NULL,
     "Description" TEXT NOT NULL
 );
