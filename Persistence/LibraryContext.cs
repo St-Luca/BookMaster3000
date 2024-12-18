@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 public class LibraryContext : DbContext
 {
@@ -23,6 +24,7 @@ public class LibraryContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql("Host=postgres.db;Port=5432;Database=bookmaster_DB;Username=postgres;Password=1234");
+        optionsBuilder.ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.NavigationBaseIncludeIgnored));
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
