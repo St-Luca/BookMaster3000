@@ -111,7 +111,7 @@ public class ClientCardController(IClientCardService _clientService) : Controlle
     public async Task<IActionResult> ExportToCsv(int bookId)
     {
         
-            var csvFilePath = await _bookCirculationService.ExportBookCirculationHistoryToCsv(bookId);
+            var csvFilePath = await _clientService.ExportBookCirculationHistoryToCsv(bookId);
 
             var fileBytes = await System.IO.File.ReadAllBytesAsync(csvFilePath);
             var fileName = Path.GetFileName(csvFilePath);

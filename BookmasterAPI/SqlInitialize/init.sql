@@ -24,7 +24,8 @@ CREATE TABLE "Books" (
     "Title" VARCHAR(255) NOT NULL,
     "Subtitle" VARCHAR(255),
     "Description" TEXT,
-    "PublicationDate" DATE
+    "PublicationDate" DATE,
+    "IsOverdue" BINARY
 );
 
 CREATE TABLE "ExhibitionBooks" (
@@ -117,7 +118,7 @@ VALUES
 ('Science Innovations', 'A display of books and articles about scientific discoveries.');
 
 
-INSERT INTO "Books" ("Title", "Subtitle", "Description", "PublicationDate") 
+INSERT INTO "Books" ("Title", "Subtitle", "Description", "PublicationDate","IsOverdue") 
 VALUES 
 ('Harry Potter', 'A young wizard discovering his powers', 'A young wizard discovering his powers', '1997-06-26'),
 ('The Hobbit', 'A hobbit goes on an unexpected journey', 'A hobbit goes on an unexpected journey', '1937-09-21'),
