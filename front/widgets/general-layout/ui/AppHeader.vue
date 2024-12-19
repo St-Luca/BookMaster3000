@@ -66,6 +66,11 @@ const items = ref<Record<'left'|'right', Array<MenuItem>>>({
         },
       ]],
     },
+    {
+      label: "Отчёты",
+      authOnly: true,
+      to: "/reports"
+    },
   ],
   right: [
     {

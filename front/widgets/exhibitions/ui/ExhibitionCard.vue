@@ -10,6 +10,8 @@ const props = defineProps<{
   data: Exhibition;
 }>();
 
+const emit = defineEmits(['bookCardExhibitionsModalToggle'])
+
 const bookListShown = ref(false);
 const booksModalShown = ref(false);
 </script>
@@ -35,7 +37,11 @@ const booksModalShown = ref(false);
       </div>
     </div>
     <div v-if="bookListShown" class="grid grid-cols-2 gap-4 my-4">
-      <BookCard v-for="book in data.books" :book="book"></BookCard>
+      <BookCard
+        v-for="book in data.books"
+        :book="book"
+        @exhibitionsModalToggle="val => emit('bookCardExhibitionsModalToggle', val)"
+      />
     </div>
     <BooksModal :exhibitionId="data.id" v-model="booksModalShown" :key="data.id"></BooksModal>
   </div>

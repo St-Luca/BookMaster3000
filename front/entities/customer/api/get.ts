@@ -1,14 +1,6 @@
 import { api } from "~/shared/util";
 import type { ApiResultCustomer, Customer } from "../types";
-import type { ApiResultCirculationRecord, CirculationRecord } from "~/entities/circulation-record";
-
-const circulationRecordsToDomain = (data:ApiResultCirculationRecord[]) : CirculationRecord[] => 
-  data.map((b,i) => ({
-    ...b,
-    issueFrom: new Date(b.issueFrom),
-    issueTo: new Date(b.issueTo),
-    returnDate: new Date(b.returnDate),
-  }))
+import { circulationRecordsToDomain } from "~/entities/circulation-record/toDomain";
 
 export const getCustomer = (id:string) : Promise<Customer|undefined> => {
   return api<ApiResultCustomer>(`/ClientCard/${id}`, {

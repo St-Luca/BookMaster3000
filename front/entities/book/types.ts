@@ -8,6 +8,7 @@ export interface Book {
   firstPublishDate?: string;
   coverImg?: string;
   subjects?: string[];
+  // covers: string[];
   authors: Author[];
 }
 
