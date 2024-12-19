@@ -10,7 +10,7 @@ definePageMeta({
 
 const tabs = ref([
   {
-    label: "Напоминания",
+    label: "Выданные книги",
     slot: "reminders"
   },
   {

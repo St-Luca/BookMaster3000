@@ -53,11 +53,8 @@ const rows = computed(() => data.value?.map(item => ({
           padding: 'py-3',
         },
         td: {
-          base: 'text-gray-800 cursor-pointer',
+          base: 'text-gray-800',
           padding: 'py-2',
-        },
-        tr: {
-          base: 'hover:bg-gray-100 duration-100',
         },
       }"
     ></UTable>
