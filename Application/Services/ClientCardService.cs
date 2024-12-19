@@ -48,6 +48,7 @@ public class ClientCardService(
         if (client != null)
         {
             clientData.Adapt(client);
+            client.Id = id;
 
             await _clientCardRepository.EditClientCard(client);
 
