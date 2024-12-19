@@ -182,12 +182,21 @@ public class ClientCardService(
             throw new Exception("No records found for the specified book.");
         }
 
+        var exportRecords = circulationRecords.Select(record => new CirculationRecordExport
+            {
+                BookTitle = record.BookTitle,
+                BookSubtitle = record.BookSubtitle,
+                ClientName = record.ClientName,
+                IssueFrom = record.IssueFrom,
+                IssueTo = record.IssueTo,
+            }).ToList();
+
         var filePath = $"BookCirculationHistory_{bookId}_{DateTime.Now:yyyyMMddHHmmss}.csv";
         
         using (var writer = new StreamWriter(filePath))
         using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
         {
-            csv.WriteRecords(circulationRecords);
+            csv.WriteRecords(exportRecords);
         }
 
         return filePath;
@@ -201,12 +210,22 @@ public class ClientCardService(
         {
             throw new Exception("No reminders found.");
         }
+
+        var exportRecords = reminders.Select(record => new CirculationRecordExport
+            {
+                BookTitle = record.BookTitle,
+                BookSubtitle = record.BookSubtitle,
+                ClientName = record.ClientName,
+                IssueFrom = record.IssueFrom,
+                IssueTo = record.IssueTo,
+            }).ToList();
+
         var filePath = $"BookReminders_{DateTime.Now:yyyyMMddHHmmss}.csv";
 
         using (var writer = new StreamWriter(filePath, false, Encoding.UTF8))
         using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
         {
-            await csv.WriteRecordsAsync(reminders);
+            await csv.WriteRecordsAsync(exportRecords);
         }
 
         return filePath;
