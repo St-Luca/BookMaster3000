@@ -21,6 +21,7 @@ public class Issue
 
     public DateTime? ReturnDate { get; set; }
 
+    [NotMapped]
     public bool IsRenewed {  get; set; }
 
     public void RenewReturnDateByWeek()

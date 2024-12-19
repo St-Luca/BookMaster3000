@@ -13,4 +13,5 @@ public interface IClientCardService
     Task<List<CirculationRecord>> GetBookReminders();
     Task<List<CirculationRecord>> GetBookCirculationHistory(int bookId);
     Task<string> ExportBookCirculationHistoryToCsv(int bookId);
+    Task<string> ExportBookRemindersToCsv();
 }

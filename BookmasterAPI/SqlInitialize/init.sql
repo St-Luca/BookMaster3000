@@ -85,7 +85,6 @@ CREATE TABLE "Issues" (
     "IssueFrom" DATE NOT NULL,
     "IssueTo" DATE,
     "ReturnDate" DATE,
-    "IsRenewed" BOOLEAN,
     FOREIGN KEY ("ClientCardId") REFERENCES "Clients"("Id"),
     FOREIGN KEY ("ClientCardId1") REFERENCES "Clients"("Id"),
     FOREIGN KEY ("ClientCardId2") REFERENCES "Clients"("Id"),
@@ -501,15 +500,15 @@ VALUES
 (196, 6), (197, 3), (198, 2), (199, 5), (200, 7);
 
 
-INSERT INTO "Issues" ("ClientCardId","ClientCardId1","ClientCardId2", "BookId", "IssueFrom", "IssueTo", "ReturnDate", "IsRenewed") 
+INSERT INTO "Issues" ("ClientCardId","ClientCardId1","ClientCardId2", "BookId", "IssueFrom", "IssueTo", "ReturnDate") 
 VALUES 
-(1,1,1, 1, '2024-10-01', '2024-10-15', '2024-10-10', FALSE),
-(2,2,2, 2, '2024-10-02', '2024-10-16', NULL, FALSE),
-(3,3,3, 3, '2024-10-03', '2024-10-17', '2024-10-14', FALSE),
-(4,4,4, 4, '2024-10-04', '2024-10-18', NULL, FALSE),
-(5,5,5, 5, '2024-10-05', '2024-10-19', '2024-10-18', FALSE),
-(6,6,6, 6, '2024-10-06', '2024-10-20', NULL, FALSE),
-(7,7,7, 7, '2024-10-07', '2024-10-21', '2024-10-20', FALSE),
-(8,8,8, 8, '2024-10-08', '2024-10-22', NULL, FALSE),
-(9,9,9, 9, '2024-10-09', '2024-10-23', '2024-10-22', FALSE),
-(10,10,10, 10, '2024-10-10', '2024-10-24', NULL, FALSE);
+(1,1,1, 1, '2024-10-01', '2024-10-15', '2024-10-10'),
+(2,2,2, 2, '2024-10-02', '2024-10-16', NULL),
+(3,3,3, 3, '2024-10-03', '2024-10-17', '2024-10-14'),
+(4,4,4, 4, '2024-10-04', '2024-10-18', NULL),
+(5,5,5, 5, '2024-10-05', '2024-10-19', '2024-10-18'),
+(6,6,6, 6, '2024-10-06', '2024-10-20', NULL),
+(7,7,7, 7, '2024-10-07', '2024-10-21', '2024-10-20'),
+(8,8,8, 8, '2024-10-08', '2024-10-22', NULL),
+(9,9,9, 9, '2024-10-09', '2024-10-23', '2024-10-22'),
+(10,10,10, 10, '2024-10-10', '2024-10-24', NULL);

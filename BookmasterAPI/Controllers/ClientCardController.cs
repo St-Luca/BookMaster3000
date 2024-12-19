@@ -119,4 +119,15 @@ public class ClientCardController(IClientCardService _clientService) : Controlle
             return File(fileBytes, "text/csv", fileName);
         
     }
+
+    [HttpGet("export-csv")]
+    public async Task<IActionResult> ExportRemindersToCsv()
+    {
+        var csvFilePath = await _clientService.ExportBookRemindersToCsv();
+
+        var fileBytes = await System.IO.File.ReadAllBytesAsync(csvFilePath);
+        var fileName = Path.GetFileName(csvFilePath);
+
+        return File(fileBytes, "text/csv", fileName);
+    }
 }

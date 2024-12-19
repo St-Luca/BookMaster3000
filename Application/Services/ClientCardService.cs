@@ -192,4 +192,23 @@ public class ClientCardService(
 
         return filePath;
     }
+
+    public async Task<string> ExportBookRemindersToCsv()
+    {
+        var reminders = await GetBookReminders();
+
+        if (!reminders.Any())
+        {
+            throw new Exception("No reminders found.");
+        }
+        var filePath = $"BookReminders_{DateTime.Now:yyyyMMddHHmmss}.csv";
+
+        using (var writer = new StreamWriter(filePath, false, Encoding.UTF8))
+        using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+        {
+            await csv.WriteRecordsAsync(reminders);
+        }
+
+        return filePath;
+    }
 }
