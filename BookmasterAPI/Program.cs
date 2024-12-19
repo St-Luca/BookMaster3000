@@ -35,6 +35,8 @@ public class Program
         builder.Services.AddScoped<IExhibitionService, ExhibitionService>();
         builder.Services.AddScoped<IExhibitionRepository, ExhibitionRepository>();
 
+        builder.Services.AddScoped<IExhibitionBookRepository, ExhibitionBookRepository>();
+
         builder.Services.AddControllers()
             .AddJsonOptions(options =>
             {

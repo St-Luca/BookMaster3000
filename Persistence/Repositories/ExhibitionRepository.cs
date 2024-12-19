@@ -21,26 +21,26 @@ public class ExhibitionRepository(LibraryContext _context) : IExhibitionReposito
     public async Task<Exhibition?> GetExhibition(int id)
     {
         return await _context.Exhibitions
-        .Include(c => c.Books)
-            .ThenInclude(i => i.Covers)
-        .Include(c => c.Books)
-            .ThenInclude(r => r.BookAuthors)
-        .Include(c => c.Books)
-            .ThenInclude(r => r.BookSubjects)
-        .FirstOrDefaultAsync(c => c.Id == id);
+        .Include(e => e.ExhibitionBooks)
+            .ThenInclude(eb => eb.Book) 
+                .ThenInclude(b => b.Covers) 
+            .ThenInclude(eb => eb.Book)
+                .ThenInclude(b => b.BookAuthors)
+            .ThenInclude(eb => eb.Book)
+                .ThenInclude(b => b.BookSubjects)
+        .FirstOrDefaultAsync(e => e.Id == id);
     }
 
     public async Task<List<Exhibition>> GetExhibitions()
     {
         return await _context.Exhibitions
-        .Include(e => e.Books)
-            .ThenInclude(b => b.Covers)
-        .Include(e => e.Books)
-            .ThenInclude(b => b.BookAuthors)
-                .ThenInclude(ba => ba.Author)
-        .Include(e => e.Books)
-            .ThenInclude(b => b.BookSubjects)
-                .ThenInclude(bs => bs.Subject)
+        .Include(e => e.ExhibitionBooks)
+            .ThenInclude(eb => eb.Book)
+                .ThenInclude(b => b.Covers)
+            .ThenInclude(eb => eb.Book)
+                .ThenInclude(b => b.BookAuthors)
+            .ThenInclude(eb => eb.Book)
+                .ThenInclude(b => b.BookSubjects)
         .ToListAsync();
     }
 }

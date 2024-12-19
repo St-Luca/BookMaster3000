@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 public class LibraryContext : DbContext
 {
@@ -14,6 +15,7 @@ public class LibraryContext : DbContext
     public DbSet<BookSubject> BookSubjects { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Exhibition> Exhibitions { get; set; }
+    public DbSet<ExhibitionBook> ExhibitionBooks { get; set; }
 
     public LibraryContext() {}
 
@@ -22,6 +24,7 @@ public class LibraryContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql("Host=postgres.db;Port=5432;Database=bookmaster_DB;Username=postgres;Password=1234");
+        optionsBuilder.ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.NavigationBaseIncludeIgnored));
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -57,10 +60,16 @@ public class LibraryContext : DbContext
             .HasForeignKey(i => i.ClientCardId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        modelBuilder.Entity<Exhibition>()
-            .HasMany(e => e.Books)
-            .WithOne(b => b.Exhibition)
-            .HasForeignKey(b => b.ExhibitionId);
+
+        modelBuilder.Entity<ExhibitionBook>()
+            .HasOne(eb => eb.Exhibition)
+            .WithMany(e => e.ExhibitionBooks)
+            .HasForeignKey(eb => eb.ExhibitionId);
+
+        modelBuilder.Entity<ExhibitionBook>()
+            .HasOne(eb => eb.Book)
+            .WithMany(b => b.ExhibitionBooks)
+            .HasForeignKey(eb => eb.BookId);
 
         modelBuilder.Entity<Book>()
         .HasMany(b => b.Covers)
@@ -71,10 +80,10 @@ public class LibraryContext : DbContext
         modelBuilder.Entity<Book>().HasKey(b => b.Id);
         modelBuilder.Entity<ClientCard>().HasKey(c => c.Id);
         modelBuilder.Entity<Issue>().HasKey(i => i.Id);
-        modelBuilder.Entity<Loan>().HasKey(l => l.Id);
         modelBuilder.Entity<Subject>().HasKey(s => s.Id);
         modelBuilder.Entity<User>().HasKey(s => s.Id);
         modelBuilder.Entity<Exhibition>().HasKey(s => s.Id);
+        modelBuilder.Entity<ExhibitionBook>().HasKey(eb => new { eb.ExhibitionId, eb.BookId });
 
         base.OnModelCreating(modelBuilder);
     }

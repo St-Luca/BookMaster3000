@@ -11,7 +11,8 @@ namespace Application.DTO
 
         public DateTime PublicationDate {get; set;}
 
-        public List<string> BookAuthors { get; set; } = new List<string>();
-        public List<string> BookSubjects { get; set; } = new List<string>();
+        public List<string> BookAuthors { get; set; } = [];
+        public List<string> BookSubjects { get; set; } = [];
+        public List<string> BookCovers { get; set; } = [];
     }
 }

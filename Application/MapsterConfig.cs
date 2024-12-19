@@ -18,12 +18,14 @@ public static class MapsterConfig
         TypeAdapterConfig<Book, BookDto>
             .NewConfig()
             .Map(dest => dest.BookAuthors, src => src.BookAuthors.Select(ba => ba.Author.Name).ToList())
-            .Map(dest => dest.BookSubjects, src => src.BookSubjects.Select(bs => bs.Subject.Name).ToList());
+            .Map(dest => dest.BookSubjects, src => src.BookSubjects.Select(bs => bs.Subject.Name).ToList())
+            .Map(dest => dest.BookCovers, src => src.Covers.Select(c => c.ImageUrl).ToList());
 
         TypeAdapterConfig<BookDto, Book>
             .NewConfig()
             .Map(dest => dest.BookAuthors, src => src.BookAuthors.Select(name => new BookAuthor { Author = new Author { Name = name } }).ToList())
-            .Map(dest => dest.BookSubjects, src => src.BookSubjects.Select(name => new BookSubject { Subject = new Subject { Name = name } }).ToList());
+            .Map(dest => dest.BookSubjects, src => src.BookSubjects.Select(name => new BookSubject { Subject = new Subject { Name = name } }).ToList())
+            .Map(dest => dest.Covers, src => src.BookCovers.Select(cover => new Cover { ImageUrl = cover  }).ToList());
 
         TypeAdapterConfig<Issue, CirculationRecord>
             .NewConfig()
@@ -37,12 +39,21 @@ public static class MapsterConfig
         TypeAdapterConfig<Exhibition, ExhibitionDto>
             .NewConfig()
             .Map(dest => dest.Books,
-                src => src.Books != null ? src.Books.Adapt<ICollection<BookDto>>() : new List<BookDto>());
+                 src => src.ExhibitionBooks != null
+                    ? src.ExhibitionBooks.Select(eb => eb.Book.Adapt<BookDto>()).ToList()
+                    : new List<BookDto>());
 
         TypeAdapterConfig<ExhibitionDto, Exhibition>
             .NewConfig()
-            .Map(dest => dest.Books,
-                src => src.Books != null ? src.Books.Adapt<ICollection<Book>>() : new List<Book>());
+            .Map(dest => dest.ExhibitionBooks,
+                src => src.Books != null
+                    ? src.Books.Select(bookDto => new ExhibitionBook
+                    {
+                        BookId = bookDto.Id,
+                        Book = bookDto.Adapt<Book>(),
+                        ExhibitionId = src.Id
+                    }).ToList()
+                    : new List<ExhibitionBook>());
 
     }
 }
