@@ -12,4 +12,5 @@ public interface IClientCardService
     Task<(bool IsSuccess, string Message, CirculationRecord? Record)> IssueBook(int clientId, int bookId);
     Task<List<CirculationRecord>> GetBookReminders();
     Task<List<CirculationRecord>> GetBookCirculationHistory(int bookId);
+    Task<string> ExportBookCirculationHistoryToCsv(int bookId);
 }

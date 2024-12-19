@@ -2,6 +2,10 @@ using Application.DTO;
 using Application.Interfaces;
 using Domain.Entities;
 using Mapster;
+using System.Text;
+using System.Globalization;
+using CsvHelper;
+using System.IO;
 using Persistence.Interfaces;
 
 namespace Application.Services;
@@ -167,5 +171,25 @@ public class ClientCardService(
                                     .ToList();
 
         return circulationRecords;
+    }
+
+    public async Task<string> ExportBookCirculationHistoryToCsv(int bookId)
+    {
+        var circulationRecords = await GetBookCirculationHistory(bookId);
+
+        if (!circulationRecords.Any())
+        {
+            throw new Exception("No records found for the specified book.");
+        }
+
+        var filePath = $"BookCirculationHistory_{bookId}_{DateTime.Now:yyyyMMddHHmmss}.csv";
+        
+        using (var writer = new StreamWriter(filePath))
+        using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+        {
+            csv.WriteRecords(circulationRecords);
+        }
+
+        return filePath;
     }
 }

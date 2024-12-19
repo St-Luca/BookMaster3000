@@ -1,6 +1,10 @@
 using Application.DTO;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using System.Globalization;
+using CsvHelper;
+using System.IO;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -101,5 +105,18 @@ public class ClientCardController(IClientCardService _clientService) : Controlle
         var circulationRecords = await _clientService.GetBookCirculationHistory(bookId);
 
         return Ok(circulationRecords ?? []);
+    }
+
+   [HttpGet("export-csv/{bookId}")]
+    public async Task<IActionResult> ExportToCsv(int bookId)
+    {
+        
+            var csvFilePath = await _bookCirculationService.ExportBookCirculationHistoryToCsv(bookId);
+
+            var fileBytes = await System.IO.File.ReadAllBytesAsync(csvFilePath);
+            var fileName = Path.GetFileName(csvFilePath);
+
+            return File(fileBytes, "text/csv", fileName);
+        
     }
 }
