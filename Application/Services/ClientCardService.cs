@@ -182,13 +182,12 @@ public class ClientCardService(
             throw new Exception("No records found for the specified book.");
         }
 
-        var exportRecords = circulationRecords.Select(record => new CirculationRecordExport
+        var exportRecords = circulationRecords.Select(record => new CirculationRecordExportRetern
             {
                 BookTitle = record.BookTitle,
-                BookSubtitle = record.BookSubtitle,
                 ClientName = record.ClientName,
                 IssueFrom = record.IssueFrom,
-                IssueTo = record.IssueTo,
+                IssueTo = record.ReturnDate,
             }).ToList();
 
         var filePath = $"BookCirculationHistory_{bookId}_{DateTime.Now:yyyyMMddHHmmss}.csv";
@@ -214,7 +213,6 @@ public class ClientCardService(
         var exportRecords = reminders.Select(record => new CirculationRecordExport
             {
                 BookTitle = record.BookTitle,
-                BookSubtitle = record.BookSubtitle,
                 ClientName = record.ClientName,
                 IssueFrom = record.IssueFrom,
                 IssueTo = record.IssueTo,
