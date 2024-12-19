@@ -41,19 +41,23 @@ public static class MapsterConfig
             .Map(dest => dest.Books,
                  src => src.ExhibitionBooks != null
                     ? src.ExhibitionBooks.Select(eb => eb.Book.Adapt<BookDto>()).ToList()
-                    : new List<BookDto>());
+                    : new List<BookDto>())
+            .Map(dest => dest.CreatedDate, src => src.CreatedDate.HasValue ? src.CreatedDate.Value.ToUniversalTime() : (DateTime?)null);
 
         TypeAdapterConfig<ExhibitionDto, Exhibition>
-            .NewConfig()
-            .Map(dest => dest.ExhibitionBooks,
-                src => src.Books != null
-                    ? src.Books.Select(bookDto => new ExhibitionBook
-                    {
-                        BookId = bookDto.Id,
-                        Book = bookDto.Adapt<Book>(),
-                        ExhibitionId = src.Id
-                    }).ToList()
-                    : new List<ExhibitionBook>());
-
-    }
+        .NewConfig()
+        .Map(dest => dest.ExhibitionBooks, 
+            src => src.Books != null 
+                ? src.Books.Select(bookDto => new ExhibitionBook 
+                {
+                    BookId = bookDto.Id,
+                    Book = bookDto.Adapt<Book>(),
+                    ExhibitionId = src.Id
+                }).ToList() 
+                : new List<ExhibitionBook>())
+        .Map(dest => dest.CreatedDate, 
+            src => src.CreatedDate.HasValue 
+                ? src.CreatedDate.Value.ToUniversalTime() 
+                : (DateTime?)null);
+        }
 }

@@ -18,7 +18,11 @@ public class ClientCardRepository(LibraryContext _context) : IClientCardReposito
 
     public async Task<List<ClientCard>> GetAllClientCards()
     {
-        return await _context.Clients.ToListAsync();
+        return await _context.Clients
+        .Include(c => c.Issues)
+            .ThenInclude(i => i.Book)
+        .Include(c => c.Returns)
+            .ThenInclude(r => r.Book).ToListAsync();
     }
 
     public async Task AddClientCard(ClientCard client)
