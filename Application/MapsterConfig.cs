@@ -34,7 +34,9 @@ public static class MapsterConfig
             .Map(dest => dest.BookSubtitle, src => src.Book.Subtitle)
             .Map(dest => dest.IssueFrom, src => src.IssueFrom)
             .Map(dest => dest.IssueTo, src => src.IssueTo)
-            .Map(dest => dest.ReturnDate, src => src.ReturnDate);
+            .Map(dest => dest.ReturnDate, src => src.ReturnDate)
+            .Map(dest => dest.ClientId, src => src.ClientCardId)
+            .Map(dest => dest.ClientName, src => src.ClientCard.Name);
 
         TypeAdapterConfig<Exhibition, ExhibitionDto>
             .NewConfig()
