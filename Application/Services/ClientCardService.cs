@@ -149,7 +149,7 @@ public class ClientCardService(
 
         return clients
                 .SelectMany(client => client.Issues)
-                .Where(i => i.IssueTo < DateTime.Now.ToUniversalTime())
+                .Where(i => i.IssueTo < DateTime.Now.ToUniversalTime() && i.ReturnDate is null)
                 .Select(issue => issue.Adapt<CirculationRecord>())
                 .ToList();
     }
