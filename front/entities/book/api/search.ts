@@ -13,7 +13,8 @@ type ApiResponse = {
     subtitle: string,
     publicationDate: string,
     bookAuthors: Array<string>,
-    bookSubjects: Array<string>
+    bookSubjects: Array<string>,
+    bookCovers: Array<string>,
   }>
 }
 
@@ -34,7 +35,8 @@ export const searchBook = (params: BookSearchParams) : Promise<BookListResponse|
           id: i,
           name: author,
         })),
-        subjects: apiBook.bookSubjects
+        subjects: apiBook.bookSubjects,
+        coverImg: apiBook.bookCovers.length ? apiBook.bookCovers[0] : undefined,
       }))
     }
   })

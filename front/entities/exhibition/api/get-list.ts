@@ -18,7 +18,8 @@ type ApiResponse = {
       subtitle: string,
       publicationDate: string,
       bookAuthors: Array<string>,
-      bookSubjects: Array<string>
+      bookSubjects: Array<string>,
+      bookCovers: Array<string>,
     }>;
   }>
 }
@@ -30,7 +31,7 @@ export const getExhibitionsList = () : Promise<Array<Exhibition>> => {
   }).then(res => {
     if (!res._data) return [];
     if (res.statusText !== "OK") return [];
-    return {
+    const val = {
       ...res._data,
       exhibitions: res._data.exhibitions.map(ex => ({
         ...ex,
@@ -40,9 +41,12 @@ export const getExhibitionsList = () : Promise<Array<Exhibition>> => {
             id: i,
             name: author,
           })),
-          subjects: apiBook.bookSubjects
+          subjects: apiBook.bookSubjects,
+          coverImg: apiBook.bookCovers.length ? apiBook.bookCovers[0] : undefined,
         }))
       }))
     }.exhibitions
+    console.log(val);
+    return val;
   })
 }

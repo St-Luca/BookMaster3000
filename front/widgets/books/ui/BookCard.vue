@@ -12,7 +12,7 @@ const props = defineProps<{
   book?: Book,
 }>();
 
-const emit = defineEmits([ 'clickAuthor', 'clickSubject' ]);
+const emit = defineEmits([ 'clickAuthor', 'clickSubject', 'exhibitionsModalToggle' ]);
 
 const badges = computed(() => [
   {
@@ -61,6 +61,8 @@ const handleExhibitionsClick = () => {
   console.log(exhibitionsModalOpen.value);
   exhibitionsModalOpen.value = !exhibitionsModalOpen.value;
 }
+
+watch(exhibitionsModalOpen, (val) => emit("exhibitionsModalToggle", val))
 </script>
 
 <template>
@@ -72,7 +74,7 @@ const handleExhibitionsClick = () => {
         v-if="mode == 'book' || !viewedAuthor"
         :title="book.title"
         :subtitle="book.subtitle"
-        :image="book.coverImg"
+        :img="book.coverImg"
         :noImagePolicy="'blank'"
         :badges="badges"
         class="flex gap-4"

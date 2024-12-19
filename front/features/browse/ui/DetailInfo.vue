@@ -68,7 +68,7 @@ const props = withDefaults(defineProps<Props>(), {
           v-if="img"
           :src="img"
           alt=""
-          class="object-cover w-full h-full"
+          class="object-cover object-center w-full h-full"
         >
       </div>
     </div>
