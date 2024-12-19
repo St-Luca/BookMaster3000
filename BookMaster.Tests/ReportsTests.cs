@@ -14,8 +14,6 @@ namespace Application.Tests.Services
 {
     public class ClientCardServiceTests
     {
-        // ... other test methods
-
         [Fact]
         public async Task GetBookReminders_ReturnsListOfCirculationRecords()
         {
